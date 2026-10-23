@@ -81,6 +81,9 @@ header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px
 @media(max-width:350px){header{gap:1px;padding:10px 6px}.hbtn{min-width:30px;padding:0 5px}.hbtn.primary{font-size:12px;padding:0 9px}.brand{font-size:14px!important}.slider-row label{width:90px}.slider-row{gap:8px}.tab{font-size:11px}}
 </style><style>
 #toast{position:absolute;top:auto;bottom:42px;z-index:60;background:#25324eee;max-width:90vw;padding:7px 12px}#tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}.tab{min-width:0;font-size:11px;padding:7px 2px}.tab .ico{height:21px;margin-bottom:2px}.tab svg{width:19px;height:19px}#panelBody{max-height:33dvh}.tools{padding:8px 14px 14px}.tools p{font-size:12px;line-height:1.5;color:#c3cde1;margin:6px 0 10px}.tools button,.sheet button{background:#29334c;border-radius:10px;padding:10px 14px;min-height:42px;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.tools input:not([type=range]),.sheet input:not([type=range]),.sheet select{background:#0e1525;border:1px solid #46516c;color:#edf1ff;border-radius:9px;padding:10px;min-width:0;max-width:100%;font:inherit}.tools .slider-row{padding:4px 0}.small-note{font-size:11px!important;color:#aab8d1!important}.item-row{display:flex;align-items:center;gap:8px;border-top:1px solid #303a50;padding:8px 0}.item-row span{flex:1;min-width:0;overflow-wrap:anywhere;font-size:13px}.item-row button{padding:8px 10px}.sheet{background:#161e2f;color:#edf1ff;border:1px solid #38445d;border-radius:18px;width:min(400px,94vw);max-height:88dvh;padding:20px;overflow:auto}.sheet::backdrop{background:#000a}.sheet h2{margin:0 0 16px;font-size:19px}.sheet label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;font-size:14px}.sheet .actions{justify-content:flex-end}.sheet p{font-size:12px;line-height:1.5;color:#c3cde1}#compareWrap{position:absolute;top:8px;left:15%;width:70%;display:none;background:#101827e8;border-radius:12px;padding:6px 10px;z-index:8}#compareWrap label{display:flex;align-items:center;gap:10px;font-size:11px}#compareRange{min-width:0;width:100%}.swatches{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.swatches button{width:28px;height:28px;min-height:28px;padding:0;border:2px solid transparent;border-radius:50%}.swatches button.active{border-color:white;box-shadow:0 0 0 2px #7e90c9}#draftsList{max-height:34dvh;overflow:auto;width:min(320px,90vw)}.draft-preview{width:38px;height:38px;border-radius:6px;object-fit:cover}
+#curveCanvas{display:block;margin:8px auto;width:min(240px,80vw);height:min(240px,80vw);background:#0e1525;border:1px solid #38445d;border-radius:12px;touch-action:none}
+.curve-actions{display:flex;gap:8px;justify-content:center;margin:4px 0 10px}
+.curve-actions .chip{padding:7px 12px;font-size:12px}
 </style></head>
 <body>
 <div id="app">
@@ -106,7 +109,7 @@ header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px
       <button class="tab" data-tab="crop"><span class="ico">⬒</span>Crop</button>
       <button class="tab active" data-tab="light"><span class="ico">☀</span>Light</button>
       <button class="tab" data-tab="color"><span class="ico">🎨</span>Color</button>
-      <button class="tab" data-tab="reference"><span class="ico"></span>Match</button><button class="tab" data-tab="hsl"><span class="ico"></span>HSL</button><button class="tab" data-tab="brush"><span class="ico"></span>Brush</button><button class="tab" data-tab="compare"><span class="ico"></span>Compare</button><button class="tab" data-tab="faces"><span class="ico">☺</span>Faces</button><button class="tab" data-tab="effects"><span class="ico">◐</span>Effects</button>
+      <button class="tab" data-tab="reference"><span class="ico"></span>Match</button><button class="tab" data-tab="hsl"><span class="ico"></span>HSL</button><button class="tab" data-tab="brush"><span class="ico"></span>Brush</button><button class="tab" data-tab="curve"><span class="ico">&#8776;</span>Curve</button><button class="tab" data-tab="detail"><span class="ico">&#9636;</span>Detail</button><button class="tab" data-tab="grading"><span class="ico">&#9684;</span>Grading</button><button class="tab" data-tab="compare"><span class="ico"></span>Compare</button><button class="tab" data-tab="faces"><span class="ico">☺</span>Faces</button><button class="tab" data-tab="effects"><span class="ico">◐</span>Effects</button>
     </div>
   </div>
 </div>
@@ -117,7 +120,7 @@ header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px
   <button class="big-btn b2" id="btnCam">Take a photo</button>
   <button class="big-btn b2" id="btnDrafts">Saved drafts</button><div id="draftsList"></div><div class="foot">Gökalp Hizmetleri</div>
 </div>
-<input type="file" id="fileRef" accept="image/*" style="display:none"><input type="file" id="filePick" accept="image/*" style="display:none">
+<input type="file" id="fileRef" accept="image/*" style="display:none"><input type="file" id="fileDrafts" accept="application/json,.json" style="display:none"><input type="file" id="filePick" accept="image/*" style="display:none">
 <input type="file" id="fileCam" accept="image/*" capture="environment" style="display:none">
 <dialog class="sheet" id="exportDialog"><h2>Export photo</h2><label>Format <select id="exportFormat"><option value="jpeg">JPEG</option><option value="png">PNG</option></select></label><label id="qualityLabel">JPEG quality <input type="number" id="exportQuality" min="1" max="100" value="92"></label><label>Longest side <select id="exportSize"><option value="4000">Up to 4000 px</option><option value="2048">Up to 2048 px</option><option value="1080">Up to 1080 px</option></select></label><p>No upscaling. Device limits may reduce the size. JPEG uses a black background for transparent areas. PNG keeps transparency. EXIF/GPS metadata is not copied.</p><div class="actions"><button id="cancelExport">Cancel</button><button id="confirmExport">Export</button></div></dialog><div id="toast"></div>
 <div id="spinner"><div class="box">Processing...</div></div>
@@ -131,7 +134,11 @@ const PARAMS=[
  ["whites","Whites","light"],["blacks","Blacks","light"],
  ["temp","Temperature","color"],["tint","Tint","color"],
  ["vibrance","Vibrance","color"],["saturation","Saturation","color"],
- ["clarity","Clarity","effects"],["vignette","Vignette","effects"]];
+ ["clarity","Clarity","effects"],["vignette","Vignette","effects"],
+ ["sharpen","Sharpening","detail"],["sharpenRadius","Sharpen radius","detail"],["sharpenMask","Sharpen masking","detail"],["noiseReduction","Noise reduction","detail"],
+ ["cgSHue","Shadows hue","grading"],["cgSSat","Shadows saturation","grading"],["cgSLum","Shadows luminance","grading"],
+ ["cgMHue","Midtones hue","grading"],["cgMSat","Midtones saturation","grading"],["cgMLum","Midtones luminance","grading"],
+ ["cgHHue","Highlights hue","grading"],["cgHSat","Highlights saturation","grading"],["cgHLum","Highlights luminance","grading"]];
 const PRESETS=[
  ["Original",{}],
  ["Vivid",{saturation:15,vibrance:20,contrast:10,clarity:15}],
@@ -147,11 +154,68 @@ function defaultParams(){const p={refAmount:0,localExposure:0,localTemp:0,localT
 state.params=defaultParams();
 
 state.refMean=[.5,.5,.5];state.refStd=[.2,.2,.2];state.srcMean=[.5,.5,.5];state.srcStd=[.2,.2,.2];state.refThumb=null;
-state.faces=[];state.faceOptions={smooth:0,spot:0,lip:0,blush:0,shadow:0,fun:"none",strength:75};state.faceStatus="Not scanned";state.faceJob=0;state.imageId=0;state.strokes=[];state.maskDirty=true;state.split=-1;state.brushSize=10;state.erase=false;state.hslColor=0;state.maskCanvas=document.createElement("canvas");state.maskCanvas.width=512;state.maskCanvas.height=512;
+state.faces=[];state.faceOptions={smooth:0,spot:0,lip:0,blush:0,shadow:0,fun:"none",strength:75};state.curves=defaultCurves();state.faceStatus="Not scanned";state.faceJob=0;state.imageId=0;state.strokes=[];state.maskDirty=true;state.split=-1;state.brushSize=10;state.erase=false;state.hslColor=0;state.maskCanvas=document.createElement("canvas");state.curveChannel="rgb";state.maskCanvas.width=512;state.maskCanvas.height=512;
+const STR={
+en:{},
+tr:{"Library":"Kitaplık","Looks":"Görünüm","Crop":"Kırp","Light":"Işık","Color":"Renk","Curve":"Eğri","Detail":"Ayrıntı","Grading":"Renk ayarı","Match":"Eşle","HSL":"HSL","Brush":"Fırça","Compare":"Karşılaştır","Faces":"Yüzler","Effects":"Efektler",
+"Open photo":"Fotoğraf aç","Take a photo":"Fotoğraf çek","Saved drafts":"Kayıtlı taslaklar","Export":"Dışa aktar","New photo":"Yeni fotoğraf","Undo":"Geri al","Redo":"Yinele",
+"Exposure":"Pozlama","Contrast":"Kontrast","Highlights":"Parlak alanlar","Shadows":"Gölgeler","Whites":"Beyazlar","Blacks":"Siyahlar","Temperature":"Sıcaklık","Tint":"Ton","Vibrance":"Canlılık","Saturation":"Doygunluk","Clarity":"Netlik","Vignette":"Vinyet",
+"Sharpening":"Keskinleştirme","Sharpen radius":"Keskinlik yarıçapı","Sharpen masking":"Keskinlik maskesi","Noise reduction":"Parazit azaltma",
+"Shadows hue":"Gölge tonu","Shadows saturation":"Gölge doygunluğu","Shadows luminance":"Gölge parlaklığı","Midtones hue":"Ara ton rengi","Midtones saturation":"Ara ton doygunluğu","Midtones luminance":"Ara ton parlaklığı","Highlights hue":"Parlak alan tonu","Highlights saturation":"Parlak alan doygunluğu","Highlights luminance":"Parlak alan parlaklığı",
+"Tone curve. Drag points to reshape brightness per channel. Tap the line to add a point; drag a middle point off the edge to remove it.":"Ton eğrisi. Noktaları sürükleyerek parlaklığı kanal bazında şekillendir. Nokta eklemek için çizgiye dokun; orta noktayı kenarın dışına sürükleyerek sil.",
+"Reset curve":"Eğriyi sıfırla","Reset all edits":"Tüm düzenlemeleri sıfırla","Apply":"Uygula","Rotate":"Döndür","Free":"Serbest",
+"Find faces":"Yüzleri bul","Skin smoothing":"Cilt yumuşatma","Spot softening":"Lekе yumuşatma","Lip color":"Dudak rengi","Blush":"Allık","Eye shadow":"Göz farı","Fun opacity":"Eğlence opaklığı","Remove face effects":"Yüz efektlerini kaldır",
+"Save draft":"Taslağı kaydet","Save preset":"Ön ayarı kaydet","Draft or preset name":"Taslak veya ön ayar adı","Open":"Aç","Delete":"Sil","Language":"Dil",
+"Export drafts":"Taslakları dışa aktar","Import drafts":"Taslak içe aktar","Match strength":"Eşleme gücü","Choose reference":"Referans seç","Change reference":"Referansı değiştir","Remove effect":"Efekti kaldır",
+"Center split":"Bölmeyi ortala","Clear mask":"Maskeyi temizle","Brush size":"Fırça boyutu","Cancel":"Vazgeç","Export photo":"Fotoğrafı dışa aktar","Hold photo to compare original":"Orijinalle karşılaştırmak için fotoğrafa basılı tut","No saved drafts on this device.":"Bu cihazda kayıtlı taslak yok.","Draft backup downloaded":"Taslak yedeği indirildi","Could not export drafts":"Taslaklar dışa aktarılamadı","Imported":"İçe aktarıldı","No drafts found in file":"Dosyada taslak bulunamadı","Could not import drafts":"Taslaklar içe aktarılamadı","Back up drafts to a file you control, or restore them on another install.":"Taslakları kontrolünüzdeki bir dosyaya yedekleyin veya başka bir kurulumda geri yükleyin."}};
+let LANG="en";
+try{LANG=localStorage.getItem("ghpe-lang")||"en";}catch(e){}
+function T(k){return(LANG==="tr"&&STR.tr[k])||k;}
+function setLang(l){LANG=l;try{localStorage.setItem("ghpe-lang",l);}catch(e){}
+ document.querySelectorAll(".tab").forEach(t=>{const n=t.dataset.tab;const label={library:"Library",presets:"Looks",crop:"Crop",light:"Light",color:"Color",curve:"Curve",detail:"Detail",grading:"Grading",reference:"Match",hsl:"HSL",brush:"Brush",compare:"Compare",faces:"Faces",effects:"Effects"}[n];if(label)t.childNodes[t.childNodes.length-1].textContent=T(label);});
+ $("#btnPick").textContent=T("Open photo");$("#btnCam").textContent=T("Take a photo");$("#btnDrafts").textContent=T("Saved drafts");
+ $("#btnExport").textContent=T("Export");$("#btnNew").title=T("New photo");$("#btnUndo").title=T("Undo");$("#btnRedo").title=T("Redo");
+ $("#hint").textContent=T("Hold photo to compare original");
+ buildPanel();}
+function defaultCurves(){return{rgb:[[0,0],[1,1]],r:[[0,0],[1,1]],g:[[0,0],[1,1]],b:[[0,0],[1,1]]};}
+function curveActive(){return["rgb","r","g","b"].some(k=>{const c=state.curves[k];return c.length!==2||c.some((p,i)=>Math.abs(p[0]-i)>0.001||Math.abs(p[1]-i)>0.001);});}
+function curveLUTKey(){return JSON.stringify(state.curves);}
+function evalCurve(pts,x){
+ const n=pts.length;if(x<=pts[0][0])return pts[0][1];if(x>=pts[n-1][0])return pts[n-1][1];
+ let i=0;while(i<n-2&&x>pts[i+1][0])i++;
+ const x0=pts[i][0],x1=pts[i+1][0],y0=pts[i][1],y1=pts[i+1][1],h=x1-x0;
+ const m=new Array(n);
+ for(let k=1;k<n-1;k++){const d=(pts[k+1][1]-pts[k-1][1])/(pts[k+1][0]-pts[k-1][0]);m[k]=d;}
+ m[0]=(pts[1][1]-pts[0][1])/(pts[1][0]-pts[0][0]);m[n-1]=(pts[n-1][1]-pts[n-2][1])/(pts[n-1][0]-pts[n-2][0]);
+ for(let k=0;k<n-1;k++){const dk=(pts[k+1][1]-pts[k][1])/(pts[k+1][0]-pts[k][0]);if(Math.abs(dk)<1e-6){m[k]=0;m[k+1]=0;}else{const a=m[k]/dk,b=m[k+1]/dk,s=a*a+b*b;if(s>9){const t=3/Math.sqrt(s);m[k]=t*a*dk;m[k+1]=t*b*dk;}}}
+ const t=(x-x0)/h,t2=t*t,t3=t2*t;
+ return(2*t3-3*t2+1)*y0+(t3-2*t2+t)*h*m[i]+(-2*t3+3*t2)*y1+(t3-t2)*h*m[i+1];
+}
+function uploadCurveTex(ctx){
+ const lut=new Uint8Array(256*4);
+ for(let i=0;i<256;i++){
+  const x=i/255;
+  for(let c=0;c<3;c++){
+   const ch=["r","g","b"][c];
+   let v=evalCurve(state.curves[ch],x);
+   v=evalCurve(state.curves.rgb,v);
+   lut[i*4+c]=Math.round(Math.min(1,Math.max(0,v))*255);
+  }
+  lut[i*4+3]=255;
+ }
+ const gl=ctx.gl;
+ gl.activeTexture(gl.TEXTURE4);
+ gl.bindTexture(gl.TEXTURE_2D,ctx.texCurve);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,256,1,0,gl.RGBA,gl.UNSIGNED_BYTE,lut);
+}
 const VSRC="attribute vec2 aPos;varying vec2 vUV;void main(){vUV=aPos*0.5+0.5;gl_Position=vec4(aPos,0.,1.);}";
 const FSRC=`precision highp float;
 varying vec2 vUV;
-uniform sampler2D uImage;uniform sampler2D uPortrait;uniform sampler2D uBlur;uniform sampler2D uMask;uniform vec3 uHSL[8];uniform float uSplit,uLocalExposure,uLocalTemp,uLocalTint;
+uniform sampler2D uImage;uniform sampler2D uPortrait;uniform sampler2D uBlur;uniform sampler2D uMask;uniform sampler2D uCurve;uniform sampler2D uBlurF;uniform sampler2D uBlurM;uniform vec3 uHSL[8];uniform float uSplit,uLocalExposure,uLocalTemp,uLocalTint,uCurveOn,uSharpen,uSharpRadius,uSharpMask,uNR;uniform vec4 uCGS,uCGM,uCGH;
 uniform vec4 uCrop;uniform float uAngle;uniform float uAspect;uniform int uRot90;
 uniform float uExposure,uContrast,uHighlights,uShadows,uWhites,uBlacks;
 uniform vec3 uRefMean,uRefStd,uSrcMean,uSrcStd;uniform float uRefAmount;
@@ -187,6 +251,13 @@ void main(){
   c=(c-0.18)*(1.0+uContrast)+0.18;
   float bp=-uBlacks*0.20;float wp=1.0-uWhites*0.20;
   c=clamp((c-bp)/max(wp-bp,0.1),0.0,1.0);
+  if(uCurveOn>0.5){c=vec3(texture2D(uCurve,vec2(c.r*(255.0/256.0)+0.5/256.0,0.5)).r,texture2D(uCurve,vec2(c.g*(255.0/256.0)+0.5/256.0,0.5)).g,texture2D(uCurve,vec2(c.b*(255.0/256.0)+0.5/256.0,0.5)).b);}
+  if(uNR>0.001||uSharpen>0.001){
+   vec3 bf=mix(texture2D(uBlurF,uv).rgb,texture2D(uBlurM,uv).rgb,uSharpRadius);
+   float ld=abs(luma(c)-luma(bf));
+   if(uNR>0.001){float flatA=1.0-smoothstep(0.015,0.09,ld);c=mix(c,bf,uNR*flatA*0.85);}
+   if(uSharpen>0.001){vec3 hd=c-bf;float mt=uSharpMask*0.22;float edge=smoothstep(mt,mt+0.07,abs(luma(c)-luma(bf)));c+=uSharpen*1.6*hd*edge;}
+  }
   float bl=luma(texture2D(uBlur,uv).rgb);
   float nl=max(luma(c),0.02);
   c=clamp(c+uClarity*0.7*(nl-bl)*(c/nl),0.0,1.0);
@@ -199,6 +270,9 @@ void main(){
   vec3 hsl=rgb2hsl(clamp(c,0.0,1.0));vec3 shift=vec3(0.0);float weights=0.0;
   for(int i=0;i<8;i++){float center=i==0?0.0:i==1?.083333:i==2?.166667:i==3?.333333:i==4?.5:i==5?.666667:i==6?.75:.833333;float delta=abs(hsl.x-center);delta=min(delta,1.0-delta);float weight=max(0.0,1.0-delta/.125);shift+=uHSL[i]*weight;weights+=weight;}
   if(weights>0.0)shift/=weights;hsl.x=fract(hsl.x+shift.x*.12);hsl.y=clamp(hsl.y*(1.0+shift.y),0.0,1.0);hsl.z=clamp(hsl.z+shift.z*.25*hsl.y,0.0,1.0);c=hsl2rgb(hsl);
+  {float l3=luma(c);float wS=1.0-smoothstep(0.10,0.55,l3);float wH=smoothstep(0.45,0.90,l3);float wM=max(0.0,1.0-wS-wH);
+   c+=(uCGS.xyz*wS+uCGM.xyz*wM+uCGH.xyz*wH)*0.55;
+   c*=1.0+(uCGS.w*wS+uCGM.w*wM+uCGH.w*wH)*0.5;c=clamp(c,0.0,1.0);}
   float mask=texture2D(uMask,uv).r;c*=pow(2.0,uLocalExposure*mask);c*=vec3(1.0+uLocalTemp*mask*.2,1.0-uLocalTint*mask*.2,1.0-uLocalTemp*mask*.2);
   c=clamp(c,0.0,1.0);
  }
@@ -225,9 +299,9 @@ function makeCtx(canvas){
  const U={};
  ["uPortrait","uMask","uHSL[0]","uSplit","uLocalExposure","uLocalTemp","uLocalTint","uRefMean","uRefStd","uSrcMean","uSrcStd","uRefAmount","uImage","uBlur","uCrop","uAngle","uAspect","uRot90","uExposure","uContrast","uHighlights",
   "uShadows","uWhites","uBlacks","uTemp","uTint","uVibrance","uSaturation","uClarity",
-  "uVignette","uCompare"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
- gl.uniform1i(U.uPortrait,3);gl.uniform1i(U.uImage,0);gl.uniform1i(U.uBlur,1);gl.uniform1i(U.uMask,2);
- return{gl,U,texPortrait:gl.createTexture(),portraitKey:null,texImg:gl.createTexture(),texBlur:gl.createTexture(),texMask:gl.createTexture(),maskVersion:-1};
+  "uVignette","uCompare","uCurve","uBlurF","uBlurM","uCurveOn","uSharpen","uSharpRadius","uSharpMask","uNR","uCGS","uCGM","uCGH"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
+ gl.uniform1i(U.uPortrait,3);gl.uniform1i(U.uImage,0);gl.uniform1i(U.uBlur,1);gl.uniform1i(U.uMask,2);gl.uniform1i(U.uCurve,4);gl.uniform1i(U.uBlurF,5);gl.uniform1i(U.uBlurM,6);
+ return{gl,U,texPortrait:gl.createTexture(),portraitKey:null,texImg:gl.createTexture(),texBlur:gl.createTexture(),texMask:gl.createTexture(),maskVersion:-1,texCurve:gl.createTexture(),texBlurF:gl.createTexture(),texBlurM:gl.createTexture(),curveKey:null};
 }
 function uploadTex(ctx,tex,src){
  const gl=ctx.gl;
@@ -254,6 +328,15 @@ function uploadAll(ctx,bitmap,maxSide){
  b.width=48;b.height=Math.max(1,Math.round(48*bitmap.height/bitmap.width));
  b.getContext("2d").drawImage(bitmap,0,0,b.width,b.height);
  uploadTex(ctx,ctx.texBlur,b);
+ const small=drawTo(bitmap,maxSide);
+ const bf=document.createElement("canvas");
+ bf.width=Math.max(2,Math.round(small.width/2));bf.height=Math.max(2,Math.round(small.height/2));
+ bf.getContext("2d").drawImage(small,0,0,bf.width,bf.height);
+ uploadTex(ctx,ctx.texBlurF,bf);
+ const bm=document.createElement("canvas");
+ bm.width=Math.max(2,Math.round(small.width/6));bm.height=Math.max(2,Math.round(small.height/6));
+ bm.getContext("2d").drawImage(small,0,0,bm.width,bm.height);
+ uploadTex(ctx,ctx.texBlurM,bm);
 }
 function render(ctx,W,H,crop,rot90,angleDeg,params,compare){
  const gl=ctx.gl,U=ctx.U;
@@ -266,6 +349,18 @@ function render(ctx,W,H,crop,rot90,angleDeg,params,compare){
  gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,ctx.texBlur);
  if(state.maskDirty)rebuildMask();
  gl.activeTexture(gl.TEXTURE2);if(ctx.maskVersion!==state.maskVersion){uploadTex(ctx,ctx.texMask,state.maskCanvas);ctx.maskVersion=state.maskVersion;}gl.bindTexture(gl.TEXTURE_2D,ctx.texMask);
+ const ck=curveLUTKey();if(ctx.curveKey!==ck){uploadCurveTex(ctx);ctx.curveKey=ck;}
+ gl.activeTexture(gl.TEXTURE4);gl.bindTexture(gl.TEXTURE_2D,ctx.texCurve);
+ gl.activeTexture(gl.TEXTURE5);gl.bindTexture(gl.TEXTURE_2D,ctx.texBlurF);
+ gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,ctx.texBlurM);
+ gl.uniform1f(U.uCurveOn,curveActive()?1:0);
+ gl.uniform1f(U.uSharpen,(params.sharpen||0)/100);gl.uniform1f(U.uSharpRadius,(params.sharpenRadius||0)/100);
+ gl.uniform1f(U.uSharpMask,(params.sharpenMask||0)/100);gl.uniform1f(U.uNR,(params.noiseReduction||0)/100);
+ const cg=k=>{const h=(((params[k+"Hue"]||0)%360)+360)%360/60,sat=(params[k+"Sat"]||0)/100,lum=(params[k+"Lum"]||0)/100;
+  const ch=o=>Math.min(1,Math.max(0,Math.abs(((h+o)%6)-3)-1));
+  const r=ch(0)-0.5,g=ch(4)-0.5,b=ch(2)-0.5,f=sat*0.6;return[r*f,g*f,b*f,lum];};
+ const s3=cg("cgS"),m3=cg("cgM"),h3=cg("cgH");
+ gl.uniform4f(U.uCGS,s3[0],s3[1],s3[2],s3[3]);gl.uniform4f(U.uCGM,m3[0],m3[1],m3[2],m3[3]);gl.uniform4f(U.uCGH,h3[0],h3[1],h3[2],h3[3]);
  const hsl=[];for(let i=0;i<8;i++)hsl.push((params["hslHue"+i]||0)/100,(params["hslSat"+i]||0)/100,(params["hslLum"+i]||0)/100);gl.uniform3fv(U["uHSL[0]"],hsl);
  gl.uniform1f(U.uSplit,ctx===view?state.split:-1);gl.uniform1f(U.uLocalExposure,(params.localExposure||0)*.02);gl.uniform1f(U.uLocalTemp,(params.localTemp||0)/100);gl.uniform1f(U.uLocalTint,(params.localTint||0)/100);
  gl.uniform4f(U.uCrop,crop.x,crop.y,crop.w,crop.h);
@@ -319,21 +414,97 @@ function draw(){
 function requestDraw(){if(!rafPending){rafPending=true;requestAnimationFrame(()=>{rafPending=false;draw();});}}
 
 /* ---------- history ---------- */
-function snap(){return JSON.stringify({p:state.params,c:state.crop,r:state.rot90,a:state.angle,rm:state.refMean,rs:state.refStd,st:state.strokes,faces:state.faces,fo:state.faceOptions});}
+function snap(){return JSON.stringify({p:state.params,c:state.crop,r:state.rot90,a:state.angle,rm:state.refMean,rs:state.refStd,st:state.strokes,faces:state.faces,fo:state.faceOptions,cv:state.curves});}
 let committed=null;
 function pushHistory(){const next=snap();if(committed===next)return;if(committed)state.history.push(committed);committed=next;if(state.history.length>30)state.history.shift();state.future.length=0;syncHistButtons();}
-function restore(s){committed=s;const o=JSON.parse(s);state.params=Object.assign(defaultParams(),o.p);state.strokes=o.st||[];state.faces=o.faces||[];state.faceOptions=Object.assign(faceDefaults(),o.fo||{});state.faceStatus=state.faces.length?state.faces.length+" face(s) restored":"Not scanned";state.maskDirty=true;state.crop=o.c;state.rot90=o.r;state.angle=o.a;state.refMean=o.rm||state.refMean;state.refStd=o.rs||state.refStd;
+function restore(s){committed=s;const o=JSON.parse(s);state.params=Object.assign(defaultParams(),o.p);state.strokes=o.st||[];state.faces=o.faces||[];state.faceOptions=Object.assign(faceDefaults(),o.fo||{});state.faceStatus=state.faces.length?state.faces.length+" face(s) restored":"Not scanned";state.maskDirty=true;state.crop=o.c;state.rot90=o.r;state.angle=o.a;state.refMean=o.rm||state.refMean;state.refStd=o.rs||state.refStd;state.curves=o.cv||defaultCurves();
  if(state.tab==="crop"){state.pRot90=state.rot90;state.pAngle=state.angle;state.pCrop={...state.crop};}
  buildPanel();layout();requestDraw();}
 function syncHistButtons(){$("#btnUndo").disabled=!state.history.length;$("#btnRedo").disabled=!state.future.length;}
 $("#btnUndo").onclick=()=>{if(!state.history.length)return;state.future.push(snap());restore(state.history.pop());syncHistButtons();};
 $("#btnRedo").onclick=()=>{if(!state.future.length)return;state.history.push(snap());restore(state.future.pop());syncHistButtons();};
+/* ---------- curve & histogram ---------- */
+let histCache=null,histKey=null,histCtx=null;
+function histData(){
+ const key=snap();if(histCache&&histKey===key)return histCache;
+ if(!histCtx){const c=document.createElement("canvas");histCtx=makeCtx(c);if(!histCtx)return null;}
+ const W=160,H=Math.max(1,Math.round(160*state.imgH/state.imgW));
+ if(!histCtx.maxSide||histCtx.imgId!==state.imageId){uploadAll(histCtx,state.bitmap,160);histCtx.imgId=state.imageId;}
+ render(histCtx,W,H,state.crop,state.rot90,state.angle,state.params,false);
+ const px=new Uint8Array(W*H*4);histCtx.gl.readPixels(0,0,W,H,histCtx.gl.RGBA,histCtx.gl.UNSIGNED_BYTE,px);
+ const bins=[[0],[0],[0]];for(let c=0;c<3;c++)bins[c]=new Array(64).fill(0);
+ for(let i=0;i<px.length;i+=4){if(px[i+3]<128)continue;for(let c=0;c<3;c++)bins[c][Math.min(63,px[i+c]>>2)]++;}
+ histCache=bins;histKey=key;return bins;
+}
+function drawCurveCanvas(){
+ const cv=$("#curveCanvas");if(!cv)return;
+ const dpr=Math.min(window.devicePixelRatio||1,2),W=cv.clientWidth,H=cv.clientHeight;
+ if(cv.width!==Math.round(W*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);}
+ const cx=cv.getContext("2d");cx.setTransform(dpr,0,0,dpr,0,0);
+ cx.clearRect(0,0,W,H);
+ const hist=histData();
+ if(hist){const cols=["rgba(255,80,80,.28)","rgba(80,255,120,.28)","rgba(90,140,255,.28)"];
+  let max=1;for(let c=0;c<3;c++)for(const v of hist[c])max=Math.max(max,v);
+  for(let c=0;c<3;c++){cx.fillStyle=cols[c];for(let i=0;i<64;i++){const h=Math.pow(hist[c][i]/max,0.5)*H;cx.fillRect(i/64*W,H-h,W/64+0.5,h);}}}
+ cx.strokeStyle="#2b3449";cx.lineWidth=1;
+ for(let i=1;i<4;i++){cx.beginPath();cx.moveTo(i*W/4,0);cx.lineTo(i*W/4,H);cx.moveTo(0,i*H/4);cx.lineTo(W,i*H/4);cx.stroke();}
+ cx.strokeStyle="#3d4763";cx.beginPath();cx.moveTo(0,H);cx.lineTo(W,0);cx.stroke();
+ const toXY=pt=>[pt[0]*W,(1-pt[1])*H];
+ for(const k of["rgb","r","g","b"]){
+  const active=k===state.curveChannel;
+  const col={rgb:"#e8eaee",r:"#ff6b6b",g:"#69db7c",b:"#74c0fc"}[k];
+  cx.strokeStyle=active?col:col+"55";cx.lineWidth=active?2:1;
+  cx.beginPath();
+  for(let i=0;i<=64;i++){const v=evalCurve(state.curves[k],i/64);const[x,y]=toXY([i/64,v]);i?cx.lineTo(x,y):cx.moveTo(x,y);}
+  cx.stroke();
+  if(active){cx.fillStyle=col;for(const pt of state.curves[k]){const[x,y]=toXY(pt);cx.beginPath();cx.arc(x,y,6,0,7);cx.fill();cx.strokeStyle="#0b0e16";cx.lineWidth=1.5;cx.stroke();}}
+ }
+}
+let curveDrag=null;
+function buildCurvePanel(body){
+ const wrap=document.createElement("div");wrap.className="tools";
+ wrap.append(paragraph(T("Tone curve. Drag points to reshape brightness per channel. Tap the line to add a point; drag a middle point off the edge to remove it.")));
+ const chips=document.createElement("div");chips.className="curve-actions";
+ for(const[k,label]of[["rgb","RGB"],["r","R"],["g","G"],["b","B"]]){
+  const c=document.createElement("button");c.className="chip"+(state.curveChannel===k?" active":"");c.textContent=label;
+  c.onclick=()=>{state.curveChannel=k;buildPanel();};chips.append(c);}
+ const reset=document.createElement("button");reset.className="chip";reset.textContent=T("Reset curve");
+ reset.onclick=()=>{state.curves[state.curveChannel]=[[0,0],[1,1]];pushHistory();buildPanel();requestDraw();};
+ chips.append(reset);
+ const cv=document.createElement("canvas");cv.id="curveCanvas";
+ cv.addEventListener("pointerdown",e=>{
+  e.preventDefault();cv.setPointerCapture(e.pointerId);
+  const r=cv.getBoundingClientRect();let x=(e.clientX-r.left)/r.width,y=1-(e.clientY-r.top)/r.height;
+  const pts=state.curves[state.curveChannel];let best=-1,bd=1e9;
+  pts.forEach((pt,i)=>{const d=Math.hypot((pt[0]-x)*r.width,(pt[1]-y)*r.height);if(d<bd){bd=d;best=i;}});
+  if(bd>16){
+   const nx=Math.min(0.99,Math.max(0.01,x));
+   let i=0;while(i<pts.length&&pts[i][0]<nx)i++;
+   if(pts.length<14){pts.splice(i,0,[nx,Math.min(1,Math.max(0,y))]);best=i;}
+  }
+  if(best>=0){curveDrag={i:best,moved:false,removed:false};}
+ });
+ cv.addEventListener("pointermove",e=>{
+  if(!curveDrag)return;
+  const r=cv.getBoundingClientRect();let x=(e.clientX-r.left)/r.width,y=1-(e.clientY-r.top)/r.height;
+  const pts=state.curves[state.curveChannel];const i=curveDrag.i;if(i>=pts.length){curveDrag=null;return;}
+  if(i>0&&i<pts.length-1&&(y<-0.08||y>1.08)){pts.splice(i,1);curveDrag={i:-1,moved:true,removed:true};pushHistory();drawCurveCanvas();requestDraw();return;}
+  if(curveDrag.i<0)return;
+  const lo=i===0?0:pts[i-1][0]+0.01,hi=i===pts.length-1?1:pts[i+1][0]-0.01;
+  pts[i]=[Math.min(hi,Math.max(lo,x)),Math.min(1,Math.max(0,y))];
+  curveDrag.moved=true;drawCurveCanvas();requestDraw();
+ });
+ for(const t of["pointerup","pointercancel"])cv.addEventListener(t,()=>{if(curveDrag&&curveDrag.moved&&!curveDrag.removed)pushHistory();curveDrag=null;drawCurveCanvas();});
+ wrap.append(chips,cv);
+ body.append(wrap);
+ requestAnimationFrame(drawCurveCanvas);
+}
 /* ---------- panel ---------- */
 function sliderRow(key,label){
  const row=document.createElement("div");row.className="slider-row";
- const lb=document.createElement("label");lb.textContent=label;
+ const lb=document.createElement("label");lb.textContent=T(label);
  const inp=document.createElement("input");inp.type="range";
- inp.min=key==="angle"?-45:key==="refAmount"?0:-100;inp.max=key==="angle"?45:100;
+ inp.min=key==="angle"?-45:key==="refAmount"?0:(key.startsWith("cg")&&key.endsWith("Hue"))?0:-100;inp.max=key==="angle"?45:(key.startsWith("cg")&&key.endsWith("Hue"))?360:100;
  inp.value=key==="angle"?state.pAngle:state.params[key];
  const out=document.createElement("output");
  const val=()=>key==="angle"?state.pAngle:state.params[key];
@@ -347,7 +518,8 @@ function sliderRow(key,label){
 }
 function buildPanel(){
  const body=$("#panelBody");body.innerHTML="";
- if(["library","hsl","brush","compare","faces"].includes(state.tab)){buildExtraPanel(body);
+ if(state.tab==="curve"){buildCurvePanel(body);
+ }else if(["library","hsl","brush","compare","faces"].includes(state.tab)){buildExtraPanel(body);
  }else if(state.tab==="reference"){
  const wrap=document.createElement("div");wrap.className="ref-tools";
  const info=document.createElement("div");info.className="ref-head";
@@ -374,7 +546,7 @@ function buildPanel(){
   });
   body.append(strip);
   const rs=document.createElement("button");rs.className="reset-all";rs.textContent="Reset all edits";
-  rs.onclick=()=>{state.faceOptions=faceDefaults();state.strokes=[];state.maskDirty=true;state.params=defaultParams();state.crop={x:0,y:0,w:1,h:1};state.rot90=0;state.angle=0;
+  rs.onclick=()=>{state.faceOptions=faceDefaults();state.strokes=[];state.maskDirty=true;state.params=defaultParams();state.curves=defaultCurves();state.crop={x:0,y:0,w:1,h:1};state.rot90=0;state.angle=0;
    pushHistory();layout();requestDraw();};
   body.append(rs);
  }else if(state.tab==="crop"){
@@ -495,7 +667,7 @@ function setImage(bmp){
  state.strokes=[];state.maskDirty=true;state.split=-1;$("#compareWrap").style.display="none";
  if(state.bitmap&&state.bitmap.close)state.bitmap.close();
  state.bitmap=bmp;const stats=imageStats(bmp);state.srcMean=stats.mean;state.srcStd=stats.std;state.imgW=bmp.width;state.imgH=bmp.height;
- state.params=defaultParams();state.rot90=0;state.angle=0;state.crop={x:0,y:0,w:1,h:1};
+ state.params=defaultParams();state.curves=defaultCurves();state.rot90=0;state.angle=0;state.crop={x:0,y:0,w:1,h:1};
  state.history=[];state.future=[];committed=snap();syncHistButtons();
  if(!view){view=makeCtx(glCanvas);}
  if(!view)throw new Error("WebGL is unavailable");
@@ -510,6 +682,7 @@ $("#btnPick").onclick=()=>$("#filePick").click();
 $("#btnCam").onclick=()=>$("#fileCam").click();
 if(window.GH)$("#btnCam").style.display="none";
 $("#filePick").onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0]);e.target.value="";};
+$("#fileDrafts").onchange=e=>{if(e.target.files[0])importDrafts(e.target.files[0]);e.target.value="";};
 $("#fileCam").onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0]);e.target.value="";};
 $("#btnNew").onclick=()=>{$("#landing").style.display="flex";};
 /* ---------- compare (hold) ---------- */
@@ -576,9 +749,9 @@ document.querySelectorAll(".tab").forEach(el=>el.querySelector(".ico").innerHTML
 $("#btnNew").innerHTML=svg('<path d="m14 5-7 7 7 7"/>');$("#btnUndo").innerHTML=svg('<path d="m8 5-5 5 5 5M3 10h10a7 7 0 0 1 7 7"/>');$("#btnRedo").innerHTML=svg('<path d="m16 5 5 5-5 5m5-5H11a7 7 0 0 0-7 7"/>');
 
 /* Local tools and versioned, device-local persistence */
-function action(label,fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;return b;}
-function paragraph(text){const p=document.createElement('p');p.textContent=text;return p;}
-function textField(placeholder){const i=document.createElement('input');i.placeholder=placeholder;i.maxLength=48;return i;}
+function action(label,fn){const b=document.createElement('button');b.textContent=T(label);b.onclick=fn;return b;}
+function paragraph(text){const p=document.createElement('p');p.textContent=T(text);return p;}
+function textField(placeholder){const i=document.createElement('input');i.placeholder=T(placeholder);i.maxLength=48;return i;}
 function getDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open('GHPhotoEdit-local',1);req.onupgradeneeded=()=>{const db=req.result;db.createObjectStore('drafts',{keyPath:'id'});db.createObjectStore('presets',{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 async function dbOp(store,mode,fn){const db=await getDB();return new Promise((res,rej)=>{const tx=db.transaction(store,mode);let value;const r=fn(tx.objectStore(store));r.onsuccess=()=>value=r.result;tx.oncomplete=()=>{db.close();res(value);};tx.onerror=()=>{db.close();rej(tx.error);};});}
 const readAll=store=>dbOp(store,'readonly',s=>s.getAll());
@@ -597,6 +770,16 @@ function buildExtraPanel(body){const box=document.createElement('div');box.class
  actions.append(action('Save draft',async()=>{try{await saveDraft(name.value);toast('Draft saved');listDrafts(list);}catch(e){toast('Could not save draft. Check available storage.');}}),action('Save preset',async()=>{try{await putRecord('presets',{schema:1,id:uniqueId(),name:(name.value||'My look').slice(0,48),params:{...state.params},refMean:state.refMean,refStd:state.refStd});toast('Preset saved');loadPresets();}catch(e){toast('Could not save preset');}}));box.append(actions);
  box.append(paragraph('Saved presets include global/HSL settings, reference colors and brush effect strength, but not crop, painted mask or face effects.'));const presets=document.createElement('div');box.append(presets);async function loadPresets(){presets.innerHTML='';try{for(const pr of await readAll('presets')){const row=document.createElement('div');row.className='item-row';const label=document.createElement('span');label.textContent=pr.name;row.append(label,action('Apply',()=>{state.params=Object.assign(defaultParams(),pr.params);state.refMean=pr.refMean||state.refMean;state.refStd=pr.refStd||state.refStd;pushHistory();requestDraw();toast('Preset applied');}),action('Delete',async()=>{if(confirm('Delete this preset?')){try{await deleteRecord('presets',pr.id);loadPresets();}catch(e){toast('Could not delete preset');}}}));presets.append(row);}}catch(e){presets.append(paragraph('Device storage unavailable.'));}}loadPresets();
  const list=document.createElement('div');box.append(list);listDrafts(list);
+ box.append(paragraph('Back up drafts to a file you control, or restore them on another install.'));
+ const bk=document.createElement('div');bk.className='actions';
+ bk.append(action('Export drafts',exportDrafts),action('Import drafts',()=>$('#fileDrafts').click()));
+ box.append(bk);
+ const settings=document.createElement('div');settings.className='item-row';
+ const langLabel=document.createElement('span');langLabel.textContent=T('Language');
+ const langSel=document.createElement('select');langSel.id='langSel';langSel.setAttribute('aria-label','Language');
+ for(const[v,n]of[['en','English'],['tr','Türkçe']]){const o=document.createElement('option');o.value=v;o.textContent=n;langSel.append(o);}
+ langSel.value=LANG;langSel.onchange=()=>setLang(langSel.value);
+ settings.append(langLabel,langSel);box.append(settings);
  }else if(state.tab==='hsl'){
  box.append(paragraph('Adjust a color range, not the entire photo. Neighboring colors blend gradually.'));
  const colors=['#ed5261','#f6954d','#e6ce53','#67c77d','#55c9c6','#548ce7','#aa77e5','#d76db8'];const names=['Red','Orange','Yellow','Green','Cyan','Blue','Purple','Magenta'];const sw=document.createElement('div');sw.className='swatches';colors.forEach((color,i)=>{const b=action('',()=>{state.hslColor=i;buildPanel();layout();requestDraw();});b.style.background=color;b.classList.toggle('active',i===state.hslColor);b.title=names[i];b.setAttribute('aria-label',names[i]);sw.append(b);});box.append(sw,paragraph(names[state.hslColor]));for(const [k,label]of [['Hue','Hue'],['Sat','Saturation'],['Lum','Luminance']])box.append(sliderRow('hsl'+k+state.hslColor,label));
@@ -621,7 +804,7 @@ let faceFrame=null,faceReady=null,facePending=new Map();
 function getFaceFrame(){if(faceReady)return faceReady;faceReady=new Promise((res,rej)=>{faceFrame=document.createElement('iframe');faceFrame.hidden=true;faceFrame.src=window.GH?'https://appassets.androidplatform.net/assets/face-engine.html':'face-engine.html';document.body.append(faceFrame);let timeout=setTimeout(()=>rej(Error('Face engine unavailable')),30000);faceFrame.addEventListener('load',()=>{});facePending.set('ready',()=>{clearTimeout(timeout);res(faceFrame);});});return faceReady;}
 addEventListener('message',e=>{if(!faceFrame||e.source!==faceFrame.contentWindow)return;if(e.data?.kind==='face-ready'){facePending.get('ready')?.();facePending.delete('ready');}if(e.data?.kind==='faces'){facePending.get(e.data.id)?.(e.data);facePending.delete(e.data.id);}});
 async function scanFaces(){if(!state.bitmap)return;const image=state.imageId,id=++state.faceJob;state.faceStatus='Finding faces on device...';buildPanel();try{await getFaceFrame();if(image!==state.imageId)return;const small=drawTo(state.bitmap,1280),bitmap=await createImageBitmap(small);const answer=await new Promise((res,rej)=>{let t=setTimeout(()=>{facePending.delete(id);rej(Error('Face scan timed out'));},30000);facePending.set(id,d=>{clearTimeout(t);d.error?rej(Error(d.error)):res(d);});faceFrame.contentWindow.postMessage({kind:'detect',id,bitmap},'*',[bitmap]);});if(image!==state.imageId||id!==state.faceJob)return;state.faces=answer.faces;state.faceStatus=state.faces.length?state.faces.length+' face(s) aligned':'No face found. Try a clear, upright portrait.';pushHistory();buildPanel();requestDraw();}catch(e){if(image===state.imageId){state.faceStatus='Face scan unavailable. Other editing tools still work.';buildPanel();}}}
-function buildFacePanel(box){if(state.faceStatus==='Not scanned'){state.faceStatus='Preparing scan...';setTimeout(scanFaces,30);}requestAnimationFrame(()=>{layout();requestDraw();});box.append(paragraph('Automatic alignment on the opened photo. Local model, no photo upload. Up to 3 faces; best with clear, upright faces. Not live camera/video.'));box.append(action('Find faces',scanFaces),paragraph(state.faceStatus));if(!state.faces.length)return;for(const[k,label]of[['smooth','Skin smoothing'],['spot','Spot softening'],['lip','Lip color'],['blush','Blush'],['shadow','Eye shadow'],['strength','Fun opacity']]){const row=document.createElement('div');row.className='slider-row';let l=document.createElement('label');l.textContent=label;let inp=document.createElement('input');inp.type='range';inp.min=0;inp.max=100;inp.value=state.faceOptions[k];inp.id='face-'+k;let out=document.createElement('output');out.textContent=inp.value;inp.oninput=()=>{state.faceOptions[k]=+inp.value;out.textContent=inp.value;requestDraw();};inp.onchange=pushHistory;row.append(l,inp,out);box.append(row);}box.append(paragraph('Spot softening reduces small skin texture/contrast; it is not healing or medical correction. Scroll for playful effects.'));const sel=document.createElement('select');sel.id='face-fun';sel.setAttribute('aria-label','Fun effect');for(const[k,v]of[['none','No playful effect'],['glasses','Sunglasses'],['cat','Cat ears & whiskers'],['hearts','Heart eyes'],['crown','Star crown']]){const o=document.createElement('option');o.value=k;o.textContent=v;sel.append(o);}sel.value=state.faceOptions.fun;sel.onchange=()=>{state.faceOptions.fun=sel.value;pushHistory();requestDraw();};box.append(sel,action('Remove face effects',()=>{state.faceOptions=faceDefaults();pushHistory();buildPanel();requestDraw();}));}
+function buildFacePanel(box){if(state.faceStatus==='Not scanned'){state.faceStatus='Preparing scan...';setTimeout(scanFaces,30);}requestAnimationFrame(()=>{layout();requestDraw();});box.append(paragraph('Automatic alignment on the opened photo. Local model, no photo upload. Up to 3 faces; best with clear, upright faces. Not live camera/video.'));box.append(action('Find faces',scanFaces),paragraph(state.faceStatus));if(!state.faces.length)return;for(const[k,label]of[['smooth','Skin smoothing'],['spot','Spot softening'],['lip','Lip color'],['blush','Blush'],['shadow','Eye shadow'],['strength','Fun opacity']]){const row=document.createElement('div');row.className='slider-row';let l=document.createElement('label');l.textContent=T(label);let inp=document.createElement('input');inp.type='range';inp.min=0;inp.max=100;inp.value=state.faceOptions[k];inp.id='face-'+k;let out=document.createElement('output');out.textContent=inp.value;inp.oninput=()=>{state.faceOptions[k]=+inp.value;out.textContent=inp.value;requestDraw();};inp.onchange=pushHistory;row.append(l,inp,out);box.append(row);}box.append(paragraph('Spot softening reduces small skin texture/contrast; it is not healing or medical correction. Scroll for playful effects.'));const sel=document.createElement('select');sel.id='face-fun';sel.setAttribute('aria-label','Fun effect');for(const[k,v]of[['none','No playful effect'],['glasses','Sunglasses'],['cat','Cat ears & whiskers'],['hearts','Heart eyes'],['crown','Star crown']]){const o=document.createElement('option');o.value=k;o.textContent=v;sel.append(o);}sel.value=state.faceOptions.fun;sel.onchange=()=>{state.faceOptions.fun=sel.value;pushHistory();requestDraw();};box.append(sel,action('Remove face effects',()=>{state.faceOptions=faceDefaults();pushHistory();buildPanel();requestDraw();}));}
 const FACE_OVAL=[10,338,297,332,284,251,389,356,454,323,361,288,397,365,379,378,400,377,152,148,176,149,150,136,172,58,132,93,234,127,162,21,54,103,67,109];
 const LIPS=[61,40,37,0,267,270,291,321,314,17,84,91],INNER=[78,81,13,311,308,402,14,178],EYE_L=[33,160,158,133,153,144],EYE_R=[362,385,387,263,373,380];
 function pathLandmarks(cx,face,list,w,h){cx.beginPath();list.forEach((idx,i)=>{let p=face[idx];if(i)cx.lineTo(p.x*w,p.y*h);else cx.moveTo(p.x*w,p.y*h);});cx.closePath();}
@@ -641,6 +824,43 @@ if(o.fun==='hearts'){cx.fillStyle='#ff4e88';for(const x of[-.28,.28]){cx.save();
 if(o.fun==='cat'){cx.fillStyle='#caaff3';for(const sign of[-1,1]){cx.beginPath();cx.moveTo(sign*.25,-.5);cx.lineTo(sign*.65,-.95);cx.lineTo(sign*.69,-.32);cx.closePath();cx.fill();cx.stroke();for(let i=0;i<3;i++){cx.beginPath();cx.moveTo(sign*.2,.48+i*.04);cx.lineTo(sign*.75,.32+i*.15);cx.stroke();}}cx.fillStyle='#f3abc7';cx.beginPath();cx.moveTo(-.1,.43);cx.lineTo(.1,.43);cx.lineTo(0,.53);cx.closePath();cx.fill();}
 if(o.fun==='crown'){cx.fillStyle='#ffe08a';for(let j=0;j<5;j++){cx.save();cx.translate((j-2)*.26,-.72-Math.sin(j/4*Math.PI)*.16);cx.beginPath();for(let k=0;k<10;k++){let a=-Math.PI/2+k*Math.PI/5,rad=k%2?.06:.14;cx.lineTo(Math.cos(a)*rad,Math.sin(a)*rad);}cx.closePath();cx.fill();cx.restore();}}cx.restore();}
 
+/* ---------- draft backup ---------- */
+async function exportDrafts(){
+ try{
+  const records=await readAll('drafts');
+  if(!records.length){toast(T('No saved drafts on this device.'));return;}
+  const out={app:'GHPhotoEdit',kind:'draft-backup',version:1,exportedAt:new Date().toISOString(),drafts:[]};
+  for(const d of records){
+   const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(d.photo);});
+   out.drafts.push({name:d.name,savedAt:d.savedAt,edit:d.edit,photo:b64});
+  }
+  const blob=new Blob([JSON.stringify(out)],{type:'application/json'});
+  const name='GHPhotoEdit-drafts-'+new Date().toISOString().slice(0,10)+'.json';
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+  toast(T('Draft backup downloaded'));
+ }catch(e){toast(T('Could not export drafts'));}
+}
+async function importDrafts(file){
+ try{
+  const data=JSON.parse(await file.text());
+  if(!data||data.kind!=='draft-backup'||data.version!==1||!Array.isArray(data.drafts))throw Error('bad');
+  let n=0;
+  for(const d of data.drafts){
+   if(!d||typeof d.edit!=='string'||typeof d.photo!=='string'||!d.photo.startsWith('data:image/'))continue;
+   const b64=d.photo.split(',')[1],mime=d.photo.slice(5,d.photo.indexOf(';'));
+   const bin=atob(b64),bytes=new Uint8Array(bin.length);
+   for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+   const blob=new Blob([bytes],{type:mime});
+   let thumb='';
+   try{const bmp=await createImageBitmap(blob);const tc=document.createElement('canvas');tc.width=120;tc.height=80;tc.getContext('2d').drawImage(bmp,0,0,120,80);thumb=tc.toDataURL('image/jpeg',.6);bmp.close&&bmp.close();}catch(e){}
+   await putRecord('drafts',{schema:1,id:uniqueId(),name:(d.name||'Imported draft').slice(0,48),savedAt:d.savedAt||Date.now(),photo:blob,edit:d.edit,refThumb:null,thumb});
+   n++;
+  }
+  toast(n?T('Imported')+' '+n:T('No drafts found in file'));
+  buildPanel();
+ }catch(e){toast(T('Could not import drafts'));}
+}
 /* ---------- misc ---------- */
 stageEl.append($("#toast"));
 let toastT=null;
@@ -648,6 +868,7 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");
  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
 new ResizeObserver(()=>{layout();requestDraw();}).observe(stageEl);
 window.addEventListener("resize",()=>{layout();requestDraw();});
+setLang(LANG);
 if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
  navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
