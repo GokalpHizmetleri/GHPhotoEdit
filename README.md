@@ -2,7 +2,7 @@
 
 <p align="center"><img src="branding/logo.svg" alt="GHPhotoEdit folded-ribbons logo" width="140"></p>
 
-A local-first photo editor for Android and the web. Version 0.3.0 is an early preview, not a replacement for Lightroom.
+A local-first photo editor for Android and the web. Version 0.4.0 is an early preview, not a replacement for Lightroom.
 
 **Open the web app:** https://gokalphizmetleri.github.io/GHPhotoEdit/
 
@@ -24,6 +24,11 @@ A local-first photo editor for Android and the web. Version 0.3.0 is an early pr
 - Automatic photo face alignment with a bundled local MediaPipe model (up to3 faces)
 - Face-aware skin smoothing and spot softening, lip/blush/eye color
 - Automatically aligned sunglasses, cat ears/whiskers, heart eyes and star crown
+- Tone curves with draggable points (RGB and per-channel) over a live histogram
+- Detail tools: sharpening with radius and edge masking, noise reduction
+- Three-way color grading for shadows, midtones and highlights
+- Optional Turkish interface (English stays the default; switch in Library > Language)
+- Draft backup: export saved drafts to a file and import them on another install
 
 ## Privacy and processing
 
@@ -76,7 +81,7 @@ Output: `app/build/outputs/apk/debug/app-debug.apk`. Gradle creates a local deve
 
 ## Current limitations
 
-- No RAW development, multiple masks, healing brush, curves, catalog or cloud sync
+- No RAW development, multiple painted masks, healing brush, catalog or cloud sync
 - Face effects work on opened photos, not live camera/video. Detection can fail on obscured, very small, side-facing or poorly lit faces. Spot softening is texture reduction, not content-aware healing.
 - Exports remove EXIF/GPS metadata. PNG preserves transparency; JPEG flattens it against black
 - Export is capped at the device's WebGL limits or 4000 pixels, whichever is smaller
@@ -87,6 +92,7 @@ Output: `app/build/outputs/apk/debug/app-debug.apk`. Gradle creates a local deve
 - Draft saving is manual, not autosave. Drafts are separate snapshots and remain device-local; no portable project format or background export
 - Custom presets exclude crop and mask geometry; their brush strength only affects an existing painted mask
 - Brush mask is a fixed 512x512 soft mask in source-image coordinates; it is not an edge-aware selection
+- Draft backup files are user-managed JSON; import validates format but not photo content
 
 ## Verification
 
