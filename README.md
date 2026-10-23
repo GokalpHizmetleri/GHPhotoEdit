@@ -2,7 +2,7 @@
 
 <p align="center"><img src="branding/logo.svg" alt="GHPhotoEdit folded-ribbons logo" width="140"></p>
 
-A local-first photo editor for Android and the web. Version 0.2.0 is an early preview, not a replacement for Lightroom.
+A local-first photo editor for Android and the web. Version 0.3.0 is an early preview, not a replacement for Lightroom.
 
 **Open the web app:** https://gokalphizmetleri.github.io/GHPhotoEdit/
 
@@ -21,11 +21,15 @@ A local-first photo editor for Android and the web. Version 0.2.0 is an early pr
 - Soft brush/eraser for a single local exposure/temperature/tint mask
 - PWA manifest and offline app-shell caching after the first online visit
 
+- Automatic photo face alignment with a bundled local MediaPipe model (up to3 faces)
+- Face-aware skin smoothing and spot softening, lip/blush/eye color
+- Automatically aligned sunglasses, cat ears/whiskers, heart eyes and star crown
+
 ## Privacy and processing
 
-Photo processing runs on the device. The app does not upload image pixels or require an account, API key, AI model or paid service. Reference matching uses per-channel color statistics. It approximates a look; it cannot recover the original editing settings from another photo. Scene differences affect the result.
+Photo processing runs on the device. The app does not upload image pixels or require an account, API key or paid service. Face effects use a bundled on-device ML model, not a cloud AI service. Reference matching uses per-channel color statistics. It approximates a look; it cannot recover the original editing settings from another photo. Scene differences affect the result.
 
-The Android package requests internet permission only to check a fixed same-project HTTPS update manifest when the app opens. No image data is sent with that check. The web host receives normal page/asset requests, but the app does not send selected photos to it. Use Library > Save draft before closing to retain a photo and settings. Drafts and custom presets use local IndexedDB storage. They are not uploaded or synced; browser cleanup or uninstalling can remove them. Export important photos separately.
+The Android package requests internet permission only to check a fixed same-project HTTPS update manifest when the app opens. No image data is sent with that check. The web host receives normal page/asset requests, including the bundled model/runtime on first load. Face engine scripts and connections are restricted to their own origin; Android intercepts its face-engine HTTPS origin and serves bundled files, while blocking other external WebView requests. The upstream runtime notice mentions API metrics; this build blocks off-origin requests and tests recorded only local asset requests. Selected photos stay on the device. Use Library > Save draft before closing to retain a photo and settings. Drafts and custom presets use local IndexedDB storage. They are not uploaded or synced; browser cleanup or uninstalling can remove them. Export important photos separately.
 
 ## Getting started
 
@@ -47,6 +51,14 @@ Starting with 0.1.1, opening the app checks `android-update.json` on this projec
 
 Existing 0.1.0 installations must be manually updated once to 0.1.1 or later to gain this checker. The package ID and signing certificate match the published 0.1.0 preview. The dialog has not been visually tested on Android; version/URL policy tests and the APK build pass.
 
+## Face tools
+
+Open a photo and choose Faces. Detection runs automatically when that panel is first opened; Find faces retries it. Adjust smoothing, spot softening or makeup strength, and scroll to the playful-effect selector. Effects follow detected source-image landmarks through crop/rotation and exports. Drafts save the landmarks/settings; custom presets do not include face effects. No identity recognition is performed. Existing drafts without face fields remain supported.
+
+Runtime/model assets add about26MB to the first offline cache/download. Allow the first online load and service worker activation to finish before going offline. A failed scan leaves other tools usable. Android file-origin storage is unchanged to preserve existing drafts. The face engine is isolated at an intercepted local-asset HTTPS origin, without granting universal file access. Actual Android WebView/WASM execution remains untested.
+
+Third-party runtime/model licenses and source links are in `web/vendor/THIRD-PARTY-NOTICES.txt` and `web/vendor/LICENSE`. Test portrait images are not redistributed.
+
 ## Build Android
 
 Requirements: JDK 17, Gradle 8.7, Android SDK platform 34 and build-tools 34.0.0. The project uses Android Gradle Plugin 8.5.2.
@@ -65,7 +77,7 @@ Output: `app/build/outputs/apk/debug/app-debug.apk`. Gradle creates a local deve
 ## Current limitations
 
 - No RAW development, multiple masks, healing brush, curves, catalog or cloud sync
-- Face effects are not included in this preview; their intended category is still undecided
+- Face effects work on opened photos, not live camera/video. Detection can fail on obscured, very small, side-facing or poorly lit faces. Spot softening is texture reduction, not content-aware healing.
 - Exports remove EXIF/GPS metadata. PNG preserves transparency; JPEG flattens it against black
 - Export is capped at the device's WebGL limits or 4000 pixels, whichever is smaller
 - Large input images may exceed available memory
@@ -87,3 +99,5 @@ The folded-ribbons logo was approved for GHPhotoEdit. The web app is published o
 ### Re-run browser checks
 
 Install Node.js, Playwright (`npm install playwright`) and Chromium/Google Chrome. From `web/`, run `node ../tests/test-six.cjs`, `node ../tests/test-six-deep.cjs` and `node ../tests/test-final.cjs`. Scripts use `/usr/bin/google-chrome` and write diagnostic screenshots/exports to `/downloads` and `/tmp`; adjust those paths for your machine. The final test checks brush alignment and PNG/JPEG alpha behavior. These are browser tests, not Android device tests.
+
+Face browser tests in `tests/test-faces*.cjs` additionally need a local (not distributed) `web/testdata/portrait.jpg` portrait fixture. They cover automatic landmark inference, two faces, no face, save/reload, offline fresh inference, compare pixels, old drafts, four crop/rotation/straightening transforms, alpha and missing-model fallback. Origin-split simulation is a Chromium approximation, not an Android device test.

@@ -23,7 +23,21 @@ public class MainActivity extends Activity {
   settings.setAllowFileAccess(true);settings.setAllowContentAccess(true);
   settings.setAllowFileAccessFromFileURLs(false);settings.setAllowUniversalAccessFromFileURLs(false);
   web.setWebViewClient(new WebViewClient(){
-   @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){return true;}
+   @Override public WebResourceResponse shouldInterceptRequest(WebView v,WebResourceRequest request){
+    Uri u=request.getUrl();
+    if("https".equals(u.getScheme())&&"appassets.androidplatform.net".equals(u.getHost())&&u.getPath()!=null&&u.getPath().startsWith("/assets/")){
+     String path=u.getPath().substring(8);
+     if(path.contains(".."))return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",null,new java.io.ByteArrayInputStream(new byte[0]));
+     try{
+      String mime=path.endsWith(".wasm")?"application/wasm":path.endsWith(".js")||path.endsWith(".mjs")?"text/javascript":path.endsWith(".html")?"text/html":"application/octet-stream";
+      java.util.Map<String,String> headers=new java.util.HashMap<>();headers.put("Access-Control-Allow-Origin","*");headers.put("Cache-Control","no-store");
+      return new WebResourceResponse(mime,null,200,"OK",headers,getAssets().open(path));
+     }catch(Exception e){return new WebResourceResponse("text/plain","UTF-8",404,"Not Found",null,new java.io.ByteArrayInputStream(new byte[0]));}
+    }
+    if("http".equals(u.getScheme())||"https".equals(u.getScheme()))return new WebResourceResponse("text/plain","UTF-8",403,"Blocked",null,new java.io.ByteArrayInputStream(new byte[0]));
+    return null;
+   }
+   @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){Uri u=r.getUrl();return !("https".equals(u.getScheme())&&"appassets.androidplatform.net".equals(u.getHost())&&"/assets/face-engine.html".equals(u.getPath()));}
   });
   web.setWebChromeClient(new WebChromeClient(){
    @Override public boolean onJsConfirm(WebView view,String url,String message,JsResult result){

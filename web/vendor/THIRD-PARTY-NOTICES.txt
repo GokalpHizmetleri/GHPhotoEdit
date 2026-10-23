@@ -1,0 +1,21 @@
+MediaPipe Tasks Vision 0.10.34
+Copyright The MediaPipe Authors. Apache License, Version 2.0.
+https://github.com/google-ai-edge/mediapipe
+https://www.npmjs.com/package/@mediapipe/tasks-vision/v/0.10.34
+Files are redistributed unmodified. See LICENSE for the complete license text.
+
+Face Landmarker model bundle, float16 version1
+https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+Model components: BlazeFace short-range, FaceMesh-V2 and BlendshapeV2.
+The official model cards state Apache License, Version2.0:
+https://storage.googleapis.com/mediapipe-assets/MediaPipe%20BlazeFace%20Model%20Card%20(Short%20Range).pdf
+https://storage.googleapis.com/mediapipe-assets/Model%20Card%20MediaPipe%20Face%20Mesh%20V2.pdf
+https://storage.googleapis.com/mediapipe-assets/Model%20Card%20Blendshape%20V2.pdf
+The model is redistributed unmodified. MediaPipe is a trademark of Google.
+
+The runtime's upstream privacy notice mentions API metrics reporting.
+GHPhotoEdit hosts assets locally and restricts face-engine scripts/connections to
+its own origin via Content Security Policy. The Android WebView blocks external
+HTTP(S) resource requests; its appassets.androidplatform.net endpoint is intercepted
+and served from bundled assets. Test request logs showed only these local resources.
+No photos or face landmarks are sent to Google by GHPhotoEdit.
