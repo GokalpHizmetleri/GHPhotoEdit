@@ -46,15 +46,19 @@ The GitHub Pages HTTPS deployment, service-worker scope, offline reload/import a
 
 ### Android
 
-The preview supports Android 10 or later and uses the installed Android System WebView. Open a photo through the system file picker. Export writes a new JPEG or PNG to `Pictures/GHPhotoEdit`. The preview is debug-signed and requires permission to install from its download source. The Android preview does not include direct camera capture.
+The preview supports Android 10 or later and uses the installed Android System WebView. Open a photo through the system file picker. Export writes a new JPEG or PNG to `Pictures/GHPhotoEdit`. The Android preview does not include direct camera capture.
+
+Starting with 0.4.0 the Android app uses a new package ID (`com.gokalphizmetleri.ghphotoedit2`, launcher name "GHPhotoEdit 2") and a new dedicated release signing certificate, because the signing key of the 0.1.0-0.3.0 previews was lost. The new APK therefore installs alongside an old preview instead of replacing it; the old app and its drafts stay untouched, and drafts can be recreated in the new app. The new release certificate's SHA-256 fingerprint is published in each GitHub release so installs can be verified.
 
 The APK builds and its signature verifies. It has not been run on a physical Android device. Emulator testing was blocked by the build environment's CPU capacity, so startup, file-picker integration and gallery saving still need device testing.
 
 ## Android update notice
 
-Starting with 0.1.1, opening the app checks `android-update.json` on this project's GitHub Pages site. If a higher compatible versionCode is available, an English "Update available" dialog offers to open the official GitHub release in your browser. It never downloads or installs silently, never sends photos, and does not run while the app is closed. Offline errors and five-second timeouts are ignored so editing can continue.
+Starting with 0.1.1, opening the app checks an update manifest on this project's GitHub Pages site. If a higher compatible versionCode is available, an English "Update available" dialog offers to open the official GitHub release in your browser. It never downloads or installs silently, never sends photos, and does not run while the app is closed. Offline errors and five-second timeouts are ignored so editing can continue.
 
-Existing 0.1.0 installations must be manually updated once to 0.1.1 or later to gain this checker. The package ID and signing certificate match the published 0.1.0 preview. The dialog has not been visually tested on Android; version/URL policy tests and the APK build pass.
+The old package (0.1.1-0.3.0) keeps checking `android-update.json`, which stays pinned to the 0.3.0 release so old installs are never offered an incompatible package. The new package (0.4.0, "GHPhotoEdit 2") checks `android-update-v2.json` instead.
+
+Existing 0.1.0 installations must be manually updated once to 0.1.1 or later to gain this checker. The dialog has not been visually tested on Android; version/URL policy tests and the APK build pass.
 
 ## Face tools
 
@@ -77,7 +81,7 @@ cd android
 gradle assembleDebug
 ```
 
-Output: `app/build/outputs/apk/debug/app-debug.apk`. Gradle creates a local development signing key. No private signing key is included in the source package.
+Output: `app/build/outputs/apk/debug/app-debug.apk`. Gradle creates a local development signing key. No private signing key is included in the source package. Published release APKs are built with `gradle assembleRelease`, then zipaligned and signed externally with the project's release keystore, which is kept in encrypted vault storage outside this repository.
 
 ## Current limitations
 

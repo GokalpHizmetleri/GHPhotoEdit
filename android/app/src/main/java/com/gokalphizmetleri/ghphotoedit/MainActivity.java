@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
   new Thread(()->{
    HttpsURLConnection connection=null;
    try{
-    connection=(HttpsURLConnection)new URL("https://gokalphizmetleri.github.io/GHPhotoEdit/android-update.json").openConnection();
+    connection=(HttpsURLConnection)new URL("https://gokalphizmetleri.github.io/GHPhotoEdit/android-update-v2.json").openConnection();
     connection.setConnectTimeout(5000);connection.setReadTimeout(5000);connection.setInstanceFollowRedirects(false);
     connection.setRequestProperty("Accept","application/json");connection.setUseCaches(false);
     if(connection.getResponseCode()!=200)return;
