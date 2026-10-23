@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0c0d10">
+<title>GHPhotoEdit</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#0c0d10;--panel:#14161a;--panel2:#1b1e24;--line:#262a31;--txt:#e8eaee;--dim:#9aa1ac;--accent:#2ea6ff;--accent2:#7cc6ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overscroll-behavior:none}
+#app{display:flex;flex-direction:column;height:100dvh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+header{display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--panel);border-bottom:1px solid var(--line);min-height:52px}
+header .brand{font-weight:800;font-size:16px;flex:1}
+header .brand span{color:var(--accent)}
+.hbtn{min-width:42px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;padding:0 8px}
+.hbtn:disabled{color:#4a505a}
+.hbtn.primary{background:var(--accent);color:#04121f;font-weight:700;font-size:14px;padding:0 14px}
+#stage{flex:1;position:relative;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center;touch-action:none}
+#gl{position:absolute;box-shadow:0 0 0 1px #1c1f25}
+#hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(10,12,15,.72);color:var(--dim);font-size:12px;padding:5px 12px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .25s}
+#cropOverlay{position:absolute;inset:0;display:none;pointer-events:none}
+#cropBox{position:absolute;pointer-events:auto;border:1.5px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);touch-action:none}
+#cropBox .grid{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,transparent 33.2%,rgba(255,255,255,.35) 33.3%,rgba(255,255,255,.35) 33.5%,transparent 33.6%,transparent 66.5%,rgba(255,255,255,.35) 66.6%,rgba(255,255,255,.35) 66.8%,transparent 66.9%),linear-gradient(to bottom,transparent 33.2%,rgba(255,255,255,.35) 33.3%,rgba(255,255,255,.35) 33.5%,transparent 33.6%,transparent 66.5%,rgba(255,255,255,.35) 66.6%,rgba(255,255,255,.35) 66.8%,transparent 66.9%)}
+.handle{position:absolute;width:26px;height:26px;pointer-events:auto}
+.handle::after{content:"";position:absolute;inset:4px;border:3px solid #fff;border-radius:2px}
+#h-nw{left:-13px;top:-13px}#h-nw::after{border-right:0;border-bottom:0}
+#h-ne{right:-13px;top:-13px}#h-ne::after{border-left:0;border-bottom:0}
+#h-sw{left:-13px;bottom:-13px}#h-sw::after{border-right:0;border-top:0}
+#h-se{right:-13px;bottom:-13px}#h-se::after{border-left:0;border-top:0}
+#panel{background:var(--panel);border-top:1px solid var(--line)}
+#panelBody{max-height:34dvh;overflow-y:auto;padding:6px 4px 2px}
+.slider-row{display:flex;align-items:center;gap:10px;padding:4px 12px}
+.slider-row label{width:108px;font-size:13px;flex-shrink:0;user-select:none}
+.slider-row output{width:36px;text-align:right;font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums;flex-shrink:0}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:0;width:100%;height:34px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(to right,var(--accent) 0 var(--fill,50%),#33383f var(--fill,50%) 100%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;margin-top:-9.5px;border:none;box-shadow:0 1px 4px rgba(0,0,0,.6)}
+input[type=range]::-moz-range-track{height:3px;border-radius:2px;background:#33383f}
+input[type=range]::-moz-range-progress{height:3px;border-radius:2px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:none}
+</style>
+<style>
+.preset-strip{display:flex;gap:10px;overflow-x:auto;padding:12px}
+.preset{flex-shrink:0;width:86px;text-align:center}
+.preset canvas{width:86px;height:86px;border-radius:10px;background:#222;display:block;border:2px solid transparent}
+.preset.active canvas{border-color:var(--accent)}
+.preset span{display:block;font-size:11px;color:var(--dim);margin-top:5px}
+.preset.active span{color:var(--accent2)}
+.reset-all{margin:0 12px 12px;width:calc(100% - 24px);height:40px;border-radius:10px;background:var(--panel2);color:#ff8585;font-size:13px;font-weight:600}
+.crop-tools{padding:8px 12px 12px}
+.chip-row{display:flex;gap:8px;overflow-x:auto;padding:6px 0 10px}
+.chip{flex-shrink:0;padding:8px 14px;border-radius:999px;background:var(--panel2);font-size:13px;color:var(--dim);border:1px solid transparent}
+.chip.active{color:var(--accent2);border-color:var(--accent);background:#16283a}
+.rot-row{display:flex;align-items:center;gap:8px}.rot-row .slider-row{flex:1;min-width:0;padding:0;gap:6px}.rot-row label{width:48px}.rot-row output{width:24px}
+.rot-btn{width:44px;height:38px;border-radius:10px;background:var(--panel2);font-size:18px;flex-shrink:0}
+.apply-btn{width:100%;height:42px;border-radius:10px;background:var(--accent);color:#04121f;font-weight:700;font-size:14px;margin-top:10px}
+#tabs{display:flex;border-top:1px solid var(--line);background:var(--panel)}
+.tab{flex:1;padding:10px 0 12px;text-align:center;font-size:12px;color:var(--dim)}
+.tab.active{color:var(--accent2);font-weight:600}
+.tab .ico{display:block;font-size:17px;margin-bottom:2px}
+#landing{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:24px;background:radial-gradient(120% 90% at 50% 0%,#17222e 0%,#0c0d10 60%)}
+#landing .logo{font-size:44px;font-weight:800;letter-spacing:.5px}
+#landing .logo span{color:var(--accent)}
+#landing .tag{color:var(--dim);font-size:14px;margin-bottom:26px}
+.big-btn{width:min(320px,84vw);height:52px;border-radius:14px;font-size:16px;font-weight:700;margin:6px 0}
+.big-btn.b1{background:var(--accent);color:#04121f}
+.big-btn.b2{background:var(--panel2);color:var(--txt)}
+#landing .foot{position:absolute;bottom:20px;color:#565d68;font-size:12px}
+#toast{position:fixed;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#20242b;font-size:13px;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;max-width:86vw;text-align:center}
+#toast.show{opacity:1}
+#spinner{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:rgba(5,6,8,.6);font-size:14px}
+#spinner .box{background:var(--panel2);padding:18px 26px;border-radius:14px}
+</style>
+<style>
+:root{--bg:#0b0e16;--panel:#141925;--panel2:#20283a;--line:#2b3449;--accent:#acb7ff;--accent2:#d2daff;--dim:#b1bbce}
+header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px}.hbtn.primary{white-space:nowrap;padding:0 12px;border-radius:12px;background:linear-gradient(135deg,#b7c4ff,#7edddd);height:42px}.brand{letter-spacing:-.4px}
+#stage{background:radial-gradient(ellipse at center,#1d2538,#0b0e16 75%)}#gl{border-radius:5px;box-shadow:0 14px 50px #0008}#panel{border-radius:22px 22px 0 0;overflow:hidden;box-shadow:0 -8px 32px #0003}#panelBody{padding-top:10px}#tabs{padding:4px 4px max(4px,env(safe-area-inset-bottom));gap:2px}.tab{padding:9px 0 8px;border-radius:12px}.tab.active{background:#29334c}.tab .ico{height:24px;margin-bottom:4px}.ico svg,.hbtn svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.hbtn svg{width:20px}.slider-row{padding:4px 16px}.slider-row label{width:104px;font-size:12px}input[type=range]::-webkit-slider-thumb{background:#dfe5ff;width:20px;height:20px;margin-top:-8.5px}.preset canvas{border-radius:14px}.preset-strip{gap:12px}.preset span{font-size:12px;color:#c4cde0}#hint{opacity:1!important;background:#111a2deb;color:#dce5fa;bottom:12px;font-size:11px;padding:6px 10px}#landing{background:radial-gradient(ellipse at 20% 0%,#283857,#0b0e16 70%)}#landing .logo{font-size:40px;letter-spacing:-1.8px}#landing .tag{line-height:1.7;margin:10px 0 22px}.big-btn{border-radius:18px;height:56px}.big-btn.b1{background:linear-gradient(110deg,#b8c5ff,#7edddd)}#landing .foot{color:#a4aec2}.ref-tools{padding:6px 12px 12px}.ref-head{display:flex;align-items:center;gap:12px;margin:6px 0 12px}.ref-head img{width:62px;height:62px;object-fit:cover;border-radius:12px}.ref-head p{font-size:12px;line-height:1.6;color:#bac5d9;margin:0}.ref-tools button{min-height:44px;border-radius:12px;background:#29334c;padding:8px 14px}.ref-tools .slider-row{padding:8px 0}.section-name{font-size:12px;color:#bdc8e0;letter-spacing:.8px;text-transform:uppercase;padding:0 16px 6px}.landing-mark{width:76px;height:76px;border-radius:24px;background:linear-gradient(135deg,#b8c5ff,#71d7d9);display:grid;place-items:center;color:#10182d;margin-bottom:22px}.rot-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7}.landing-mark svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.5}
+@media(max-width:350px){header{gap:1px;padding:10px 6px}.hbtn{min-width:30px;padding:0 5px}.hbtn.primary{font-size:12px;padding:0 9px}.brand{font-size:14px!important}.slider-row label{width:90px}.slider-row{gap:8px}.tab{font-size:11px}}
+</style></head>
+<body>
+<div id="app">
+  <header>
+    <button class="hbtn" id="btnNew" title="New photo">‹</button>
+    <div class="brand">GH<span>Photo</span>Edit</div>
+    <button class="hbtn" id="btnUndo" title="Undo" disabled>↶</button>
+    <button class="hbtn" id="btnRedo" title="Redo" disabled>↷</button>
+    <button class="hbtn primary" id="btnExport">Export</button>
+  </header>
+  <div id="stage">
+    <canvas id="gl"></canvas>
+    <div id="cropOverlay"><div id="cropBox"><div class="grid"></div>
+      <div class="handle" id="h-nw"></div><div class="handle" id="h-ne"></div>
+      <div class="handle" id="h-sw"></div><div class="handle" id="h-se"></div>
+    </div></div>
+    <div id="hint">Hold photo to compare original</div>
+  </div>
+  <div id="panel">
+    <div id="panelBody"></div>
+    <div id="tabs">
+      <button class="tab" data-tab="presets"><span class="ico">✦</span>Looks</button>
+      <button class="tab" data-tab="crop"><span class="ico">⬒</span>Crop</button>
+      <button class="tab active" data-tab="light"><span class="ico">☀</span>Light</button>
+      <button class="tab" data-tab="color"><span class="ico">🎨</span>Color</button>
+      <button class="tab" data-tab="reference"><span class="ico"></span>Match</button><button class="tab" data-tab="effects"><span class="ico">◐</span>Effects</button>
+    </div>
+  </div>
+</div>
+<div id="landing">
+  <div class="landing-mark" style="background:none"><img src="logo.svg" alt="GHPhotoEdit logo" width="90" height="90"></div><div class="logo">GH<span>Photo</span>Edit</div>
+  <div class="tag">Your light. Your colors. Your style.<br>light · color · crop · photo matching</div>
+  <button class="big-btn b1" id="btnPick">Open photo</button>
+  <button class="big-btn b2" id="btnCam">Take a photo</button>
+  <div class="foot">Gökalp Hizmetleri</div>
+</div>
+<input type="file" id="fileRef" accept="image/*" style="display:none"><input type="file" id="filePick" accept="image/*" style="display:none">
+<input type="file" id="fileCam" accept="image/*" capture="environment" style="display:none">
+<div id="toast"></div>
+<div id="spinner"><div class="box">Processing...</div></div>
+<script>
+"use strict";
+/* ================= GHPhotoEdit v1 ================= */
+const $=s=>document.querySelector(s);
+const PARAMS=[
+ ["exposure","Exposure","light"],["contrast","Contrast","light"],
+ ["highlights","Highlights","light"],["shadows","Shadows","light"],
+ ["whites","Whites","light"],["blacks","Blacks","light"],
+ ["temp","Temperature","color"],["tint","Tint","color"],
+ ["vibrance","Vibrance","color"],["saturation","Saturation","color"],
+ ["clarity","Clarity","effects"],["vignette","Vignette","effects"]];
+const PRESETS=[
+ ["Original",{}],
+ ["Vivid",{saturation:15,vibrance:20,contrast:10,clarity:15}],
+ ["Warm",{temp:25,tint:5,saturation:5,exposure:5,vignette:-15}],
+ ["Cool",{temp:-25,tint:-5,contrast:8,saturation:-5}],
+ ["Film",{contrast:15,saturation:-20,highlights:-15,shadows:20,temp:8,vignette:-20,clarity:10}],
+ ["Monochrome",{saturation:-100,contrast:15,clarity:20}],
+ ["Dramatic",{contrast:25,clarity:30,saturation:-10,vignette:-25,highlights:-20,shadows:10}]];
+const state={bitmap:null,imgW:0,imgH:0,params:{},rot90:0,angle:0,
+ crop:{x:0,y:0,w:1,h:1},history:[],future:[],tab:"light",
+ cropMode:false,pRot90:0,pAngle:0,pCrop:{x:0,y:0,w:1,h:1},pAspect:null};
+function defaultParams(){const p={refAmount:0};for(const[k]of PARAMS)p[k]=0;return p;}
+state.params=defaultParams();
+
+state.refMean=[.5,.5,.5];state.refStd=[.2,.2,.2];state.srcMean=[.5,.5,.5];state.srcStd=[.2,.2,.2];state.refThumb=null;
+const VSRC="attribute vec2 aPos;varying vec2 vUV;void main(){vUV=aPos*0.5+0.5;gl_Position=vec4(aPos,0.,1.);}";
+const FSRC=`precision highp float;
+varying vec2 vUV;
+uniform sampler2D uImage;uniform sampler2D uBlur;
+uniform vec4 uCrop;uniform float uAngle;uniform float uAspect;uniform int uRot90;
+uniform float uExposure,uContrast,uHighlights,uShadows,uWhites,uBlacks;
+uniform vec3 uRefMean,uRefStd,uSrcMean,uSrcStd;uniform float uRefAmount;
+uniform float uTemp,uTint,uVibrance,uSaturation,uClarity,uVignette,uCompare;
+float luma(vec3 c){return dot(c,vec3(0.299,0.587,0.114));}
+vec2 invRot(vec2 d){
+ if(uRot90==1)return vec2(d.y,1.0-d.x);
+ if(uRot90==2)return vec2(1.0-d.x,1.0-d.y);
+ if(uRot90==3)return vec2(1.0-d.y,d.x);
+ return d;}
+void main(){
+ vec2 o=vec2(vUV.x,1.0-vUV.y);
+ vec2 r=uCrop.xy+o*uCrop.zw;
+ vec2 d=r-0.5;d.x*=uAspect;
+ float ca=cos(uAngle),sa=sin(uAngle);
+ d=vec2(ca*d.x+sa*d.y,-sa*d.x+ca*d.y);d.x/=uAspect;
+ vec2 uv=invRot(d+0.5);
+ if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){gl_FragColor=vec4(0.027,0.031,0.039,1.0);return;}
+ vec3 c=texture2D(uImage,uv).rgb;
+ if(uCompare<0.5){
+  vec3 matched=clamp((c-uSrcMean)*clamp(uRefStd/max(uSrcStd,vec3(.025)),vec3(.35),vec3(2.8))+uRefMean,0.0,1.0);
+  c=mix(c,matched,uRefAmount);
+  c*=vec3(1.0+uTemp*0.13,1.0-uTint*0.10,1.0-uTemp*0.13);
+  vec3 lin=pow(max(c,0.0),vec3(2.2));
+  lin*=pow(2.0,uExposure);
+  c=pow(lin,vec3(1.0/2.2));
+  float l=luma(c);
+  c+=uHighlights*smoothstep(0.45,0.95,l)*0.40;
+  c+=uShadows*(1.0-smoothstep(0.05,0.55,l))*0.40;
+  c=(c-0.18)*(1.0+uContrast)+0.18;
+  float bp=-uBlacks*0.20;float wp=1.0-uWhites*0.20;
+  c=clamp((c-bp)/max(wp-bp,0.1),0.0,1.0);
+  float bl=luma(texture2D(uBlur,uv).rgb);
+  float nl=max(luma(c),0.02);
+  c=clamp(c+uClarity*0.7*(nl-bl)*(c/nl),0.0,1.0);
+  float l2=luma(c);
+  float mx=max(c.r,max(c.g,c.b)),mn=min(c.r,min(c.g,c.b));
+  float sat=mx>0.0?(mx-mn)/mx:0.0;
+  c=mix(vec3(l2),c,1.0+uVibrance*(1.0-sat)*0.9+uSaturation);
+  float dist=length((o-0.5)*1.3);
+  c*=1.0+uVignette*smoothstep(0.3,0.95,dist)*0.6;
+  c=clamp(c,0.0,1.0);
+ }
+ gl_FragColor=vec4(c,1.0);
+}`;
+
+function makeCtx(canvas){
+ const gl=canvas.getContext("webgl",{preserveDrawingBuffer:true,antialias:false});
+ if(!gl)return null;
+ function sh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
+  if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o;}
+ const pr=gl.createProgram();
+ gl.attachShader(pr,sh(gl.VERTEX_SHADER,VSRC));
+ gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FSRC));
+ gl.linkProgram(pr);
+ if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(pr));
+ gl.useProgram(pr);
+ const buf=gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+ gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(pr,"aPos");
+ gl.enableVertexAttribArray(loc);
+ gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+ const U={};
+ ["uRefMean","uRefStd","uSrcMean","uSrcStd","uRefAmount","uImage","uBlur","uCrop","uAngle","uAspect","uRot90","uExposure","uContrast","uHighlights",
+  "uShadows","uWhites","uBlacks","uTemp","uTint","uVibrance","uSaturation","uClarity",
+  "uVignette","uCompare"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
+ gl.uniform1i(U.uImage,0);gl.uniform1i(U.uBlur,1);
+ return{gl,U,texImg:gl.createTexture(),texBlur:gl.createTexture()};
+}
+function uploadTex(ctx,tex,src){
+ const gl=ctx.gl;
+ gl.bindTexture(gl.TEXTURE_2D,tex);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+ gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);
+}
+function drawTo(src,maxSide){
+ const w=src.width,h=src.height,s=Math.min(1,maxSide/Math.max(w,h));
+ if(s>=1)return src;
+ const cv=document.createElement("canvas");
+ cv.width=Math.round(w*s);cv.height=Math.round(h*s);
+ cv.getContext("2d").drawImage(src,0,0,cv.width,cv.height);
+ return cv;
+}
+function uploadAll(ctx,bitmap,maxSide){
+ uploadTex(ctx,ctx.texImg,drawTo(bitmap,maxSide));
+ const b=document.createElement("canvas");
+ b.width=48;b.height=Math.max(1,Math.round(48*bitmap.height/bitmap.width));
+ b.getContext("2d").drawImage(bitmap,0,0,b.width,b.height);
+ uploadTex(ctx,ctx.texBlur,b);
+}
+function render(ctx,W,H,crop,rot90,angleDeg,params,compare){
+ const gl=ctx.gl,U=ctx.U;
+ if(gl.canvas.width!==W||gl.canvas.height!==H){gl.canvas.width=W;gl.canvas.height=H;}
+ gl.viewport(0,0,W,H);
+ const aspect=rot90%2===1?state.imgH/state.imgW:state.imgW/state.imgH;
+ gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,ctx.texImg);
+ gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,ctx.texBlur);
+ gl.uniform4f(U.uCrop,crop.x,crop.y,crop.w,crop.h);
+ gl.uniform1f(U.uAngle,angleDeg*Math.PI/180);
+ gl.uniform1f(U.uAspect,aspect);
+ gl.uniform1i(U.uRot90,rot90);
+ gl.uniform3fv(U.uRefMean,state.refMean);gl.uniform3fv(U.uRefStd,state.refStd);gl.uniform3fv(U.uSrcMean,state.srcMean);gl.uniform3fv(U.uSrcStd,state.srcStd);gl.uniform1f(U.uRefAmount,(params.refAmount||0)/100);
+ const P=n=>(params[n]||0)/100;
+ gl.uniform1f(U.uExposure,(params.exposure||0)*0.03);
+ gl.uniform1f(U.uContrast,P("contrast"));gl.uniform1f(U.uHighlights,P("highlights"));
+ gl.uniform1f(U.uShadows,P("shadows"));gl.uniform1f(U.uWhites,P("whites"));
+ gl.uniform1f(U.uBlacks,P("blacks"));gl.uniform1f(U.uTemp,P("temp"));
+ gl.uniform1f(U.uTint,P("tint"));gl.uniform1f(U.uVibrance,P("vibrance"));
+ gl.uniform1f(U.uSaturation,P("saturation"));gl.uniform1f(U.uClarity,P("clarity"));
+ gl.uniform1f(U.uVignette,P("vignette"));
+ gl.uniform1f(U.uCompare,compare?1:0);
+ gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
+/* ---------- view ---------- */
+const glCanvas=$("#gl"),stageEl=$("#stage");
+let view=null,compare=false,rafPending=false;
+function dispDims(){
+ const odd=(state.cropMode?state.pRot90:state.rot90)%2===1;
+ return odd?{w:state.imgH,h:state.imgW}:{w:state.imgW,h:state.imgH};
+}
+function viewAspect(){
+ const d=dispDims();
+ if(state.cropMode)return d.w/d.h;
+ return(d.w*state.crop.w)/(d.h*state.crop.h);
+}
+function layout(){
+ if(!state.bitmap)return;
+ const pad=16,sw=stageEl.clientWidth-pad*2,sh=stageEl.clientHeight-pad*2,a=viewAspect();
+ let w=sw,h=w/a;
+ if(h>sh){h=sh;w=h*a;}
+ const dpr=Math.min(window.devicePixelRatio||1,2);
+ glCanvas.style.width=w+"px";glCanvas.style.height=h+"px";
+ const W=Math.round(w*dpr),H=Math.round(h*dpr);
+ if(glCanvas.width!==W||glCanvas.height!==H){glCanvas.width=W;glCanvas.height=H;}
+ if(state.cropMode)positionCropBox();
+}
+function draw(){
+ if(!state.bitmap||!view)return;
+ render(view,glCanvas.width,glCanvas.height,
+  state.cropMode?{x:0,y:0,w:1,h:1}:state.crop,
+  state.cropMode?state.pRot90:state.rot90,
+  state.cropMode?state.pAngle:state.angle,
+  state.params,compare);
+}
+function requestDraw(){if(!rafPending){rafPending=true;requestAnimationFrame(()=>{rafPending=false;draw();});}}
+
+/* ---------- history ---------- */
+function snap(){return JSON.stringify({p:state.params,c:state.crop,r:state.rot90,a:state.angle,rm:state.refMean,rs:state.refStd});}
+let committed=null;
+function pushHistory(){const next=snap();if(committed===next)return;if(committed)state.history.push(committed);committed=next;if(state.history.length>60)state.history.shift();state.future.length=0;syncHistButtons();}
+function restore(s){committed=s;const o=JSON.parse(s);state.params=o.p;state.crop=o.c;state.rot90=o.r;state.angle=o.a;state.refMean=o.rm||state.refMean;state.refStd=o.rs||state.refStd;
+ if(state.tab==="crop"){state.pRot90=state.rot90;state.pAngle=state.angle;state.pCrop={...state.crop};}
+ buildPanel();layout();requestDraw();}
+function syncHistButtons(){$("#btnUndo").disabled=!state.history.length;$("#btnRedo").disabled=!state.future.length;}
+$("#btnUndo").onclick=()=>{if(!state.history.length)return;state.future.push(snap());restore(state.history.pop());syncHistButtons();};
+$("#btnRedo").onclick=()=>{if(!state.future.length)return;state.history.push(snap());restore(state.future.pop());syncHistButtons();};
+/* ---------- panel ---------- */
+function sliderRow(key,label){
+ const row=document.createElement("div");row.className="slider-row";
+ const lb=document.createElement("label");lb.textContent=label;
+ const inp=document.createElement("input");inp.type="range";
+ inp.min=key==="angle"?-45:key==="refAmount"?0:-100;inp.max=key==="angle"?45:100;
+ inp.value=key==="angle"?state.pAngle:state.params[key];
+ const out=document.createElement("output");
+ const val=()=>key==="angle"?state.pAngle:state.params[key];
+ const show=()=>{out.textContent=Math.round(val());
+  inp.style.setProperty("--fill",((inp.value-inp.min)/(inp.max-inp.min)*100)+"%");};
+ inp.addEventListener("input",()=>{if(key==="angle")state.pAngle=+inp.value;else state.params[key]=+inp.value;show();requestDraw();});
+ inp.addEventListener("change",()=>{if(key!=="angle")pushHistory();});
+ lb.addEventListener("dblclick",()=>{if(key==="angle")state.pAngle=0;else state.params[key]=0;inp.value=0;show();pushHistory();requestDraw();});
+ row.append(lb,inp,out);show();
+ return row;
+}
+function buildPanel(){
+ const body=$("#panelBody");body.innerHTML="";
+ if(state.tab==="reference"){
+ const wrap=document.createElement("div");wrap.className="ref-tools";
+ const info=document.createElement("div");info.className="ref-head";
+ if(state.refThumb){const im=document.createElement("img");im.src=state.refThumb;im.alt="Reference photo";info.append(im);}
+ const text=document.createElement("p");text.textContent="Match the color and tone of a reference photo. This creates a similar look, not the original edit settings. Photos stay on your device.";info.append(text);
+ const pick=document.createElement("button");pick.textContent=state.refThumb?"Change reference":"Choose reference";pick.onclick=()=>$("#fileRef").click();
+ const clear=document.createElement("button");clear.textContent="Remove effect";clear.style.marginLeft="0";clear.onclick=()=>{state.params.refAmount=0;pushHistory();buildPanel();requestDraw();};
+ const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;flex-wrap:wrap";pick.style.fontSize="13px";clear.style.fontSize="13px";actions.append(pick,clear);wrap.append(info,actions,sliderRow("refAmount","Match strength"));body.append(wrap);
+ }else if(state.tab==="presets"){
+  const strip=document.createElement("div");strip.className="preset-strip";
+  PRESETS.forEach(([name,p])=>{
+   const el=document.createElement("div");el.className="preset";
+   const cv=document.createElement("canvas");cv.width=86;cv.height=86;
+   el.append(cv);
+   const sp=document.createElement("span");sp.textContent=name;el.append(sp);
+   el.onclick=()=>{state.params=Object.assign(defaultParams(),p);pushHistory();
+    strip.querySelectorAll(".preset").forEach(x=>x.classList.remove("active"));
+    el.classList.add("active");requestDraw();};
+   strip.append(el);
+   if(state.bitmap){const pv=makeCtx(cv);
+    if(pv){uploadAll(pv,state.bitmap,256);
+     render(pv,86,86,{x:0,y:0,w:1,h:1},0,0,Object.assign(defaultParams(),p),false);
+     const img=document.createElement("canvas");img.width=86;img.height=86;img.getContext("2d").drawImage(cv,0,0);cv.replaceWith(img);pv.gl.getExtension("WEBGL_lose_context")?.loseContext();}}
+  });
+  body.append(strip);
+  const rs=document.createElement("button");rs.className="reset-all";rs.textContent="Reset all edits";
+  rs.onclick=()=>{state.params=defaultParams();state.crop={x:0,y:0,w:1,h:1};state.rot90=0;state.angle=0;
+   pushHistory();layout();requestDraw();};
+  body.append(rs);
+ }else if(state.tab==="crop"){
+  const wrap=document.createElement("div");wrap.className="crop-tools";
+  const chips=document.createElement("div");chips.className="chip-row";
+  [["Free",null],["1:1",1],["4:3",4/3],["3:4",3/4],["16:9",16/9],["9:16",9/16]].forEach(([n,v])=>{
+   const c=document.createElement("button");c.className="chip"+(state.pAspect===v?" active":"");c.textContent=n;
+   c.onclick=()=>{state.pAspect=v;
+    chips.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));c.classList.add("active");
+    resetCropBox();};
+   chips.append(c);});
+  const rot=document.createElement("div");rot.className="rot-row";
+  const bL=document.createElement("button");bL.className="rot-btn";bL.innerHTML=svg('<path d="M3 10a8 8 0 1 1 2 8M3 4v6h6"/>');
+  bL.onclick=()=>{state.pRot90=(state.pRot90+3)%4;layout();requestDraw();};
+  const bR=document.createElement("button");bR.className="rot-btn";bR.innerHTML=svg('<path d="M21 10a8 8 0 1 0-2 8m2-14v6h-6"/>');
+  bR.onclick=()=>{state.pRot90=(state.pRot90+1)%4;layout();requestDraw();};
+  const ang=sliderRow("angle","Rotate");
+  rot.append(bL,ang,bR);
+  const ap=document.createElement("button");ap.className="apply-btn";ap.textContent="Apply";
+  ap.onclick=applyCrop;
+  wrap.append(chips,rot,ap);body.append(wrap);
+ }else{
+  PARAMS.filter(p=>p[2]===state.tab).forEach(([k,l])=>body.append(sliderRow(k,l)));
+ }
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ t.classList.add("active");state.tab=t.dataset.tab;
+ if(state.tab==="crop")enterCrop();else exitCrop();
+ buildPanel();layout();requestDraw();});
+
+/* ---------- crop ---------- */
+const cropOverlay=$("#cropOverlay"),cropBox=$("#cropBox");
+function enterCrop(){
+ state.cropMode=true;state.pRot90=state.rot90;state.pAngle=state.angle;
+ state.pCrop={...state.crop};state.pAspect=null;
+ cropOverlay.style.display="block";$("#hint").style.opacity=0;
+}
+function exitCrop(){state.cropMode=false;cropOverlay.style.display="none";}
+function applyCrop(){
+ state.crop={...state.pCrop};state.rot90=state.pRot90;state.angle=state.pAngle;
+ pushHistory();exitCrop();
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ document.querySelector('.tab[data-tab="light"]').classList.add("active");
+ state.tab="light";buildPanel();layout();requestDraw();
+}
+function resetCropBox(){state.pCrop={x:0.06,y:0.06,w:0.88,h:0.88};
+ if(state.pAspect){fitAspect();}positionCropBox();}
+function fitAspect(){
+ const d=dispDims(),da=d.w/d.h,a=state.pAspect;
+ let w=0.88,h=w*da/a;
+ if(h>0.88){h=0.88;w=h*a/da;}
+ state.pCrop={x:(1-w)/2,y:(1-h)/2,w,h};
+}
+function positionCropBox(){
+ if(!state.cropMode)return;
+ const r=glCanvas.getBoundingClientRect(),sr=stageEl.getBoundingClientRect(),c=state.pCrop;
+ cropBox.style.left=(r.left-sr.left+c.x*r.width)+"px";
+ cropBox.style.top=(r.top-sr.top+c.y*r.height)+"px";
+ cropBox.style.width=(c.w*r.width)+"px";
+ cropBox.style.height=(c.h*r.height)+"px";
+}
+function cropDrag(e){
+ e.preventDefault();
+ const t=e.target;
+ const isH=t.classList&&t.classList.contains("handle");
+ const mode=isH?t.id:(t===cropBox||t.parentElement===cropBox?"move":null);
+ if(!mode)return;
+ cropBox.setPointerCapture(e.pointerId);
+ const sx=e.clientX,sy=e.clientY,c0={...state.pCrop};
+ const r=glCanvas.getBoundingClientRect();
+ const move=ev=>{
+  const dx=(ev.clientX-sx)/r.width,dy=(ev.clientY-sy)/r.height;
+  let{x,y,w,h}=c0;
+  if(mode==="move"){x=c0.x+dx;y=c0.y+dy;}
+  else{
+   if(mode.includes("w")){x=c0.x+dx;w=c0.w-dx;}
+   if(mode.includes("e")){w=c0.w+dx;}
+   if(mode.includes("n")){y=c0.y+dy;h=c0.h-dy;}
+   if(mode.includes("s")){h=c0.h+dy;}
+   if(state.pAspect){
+    const d=dispDims(),da=d.w/d.h,ta=state.pAspect;
+    if(mode==="h-se"||mode==="h-nw"){h=w*da/ta;}
+    else{w=h*ta/da;}
+    if(mode.includes("w"))x=c0.x+c0.w-w;
+    if(mode.includes("n"))y=c0.y+c0.h-h;
+   }
+  }
+  const m=0.02;
+  w=Math.min(Math.max(w,0.08),1);h=Math.min(Math.max(h,0.08),1);
+  x=Math.min(Math.max(x,0),1-w);y=Math.min(Math.max(y,0),1-h);
+  state.pCrop={x,y,w,h};positionCropBox();
+ };
+ const up=()=>{cropBox.removeEventListener("pointermove",move);cropBox.removeEventListener("pointerup",up);};
+ cropBox.addEventListener("pointermove",move);
+ cropBox.addEventListener("pointerup",up);
+}
+cropOverlay.addEventListener("pointerdown",cropDrag);
+
+/* ---------- image loading ---------- */
+async function loadFile(file){
+ $("#spinner").style.display="flex";
+ try{
+  const bmp=await createImageBitmap(file,{imageOrientation:"from-image"});
+  setImage(bmp);
+ }catch(err){
+  try{
+   const url=URL.createObjectURL(file);
+   const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});
+   const bmp=await createImageBitmap(img);URL.revokeObjectURL(url);setImage(bmp);
+  }catch(e2){toast("Could not open photo");}
+ }
+ $("#spinner").style.display="none";
+}
+function setImage(bmp){
+ if(state.bitmap&&state.bitmap.close)state.bitmap.close();
+ state.bitmap=bmp;const stats=imageStats(bmp);state.srcMean=stats.mean;state.srcStd=stats.std;state.imgW=bmp.width;state.imgH=bmp.height;
+ state.params=defaultParams();state.rot90=0;state.angle=0;state.crop={x:0,y:0,w:1,h:1};
+ state.history=[];state.future=[];committed=snap();syncHistButtons();
+ if(!view){view=makeCtx(glCanvas);}
+ if(!view)throw new Error("WebGL is unavailable");
+ uploadAll(view,bmp,Math.min(1600,view.gl.getParameter(view.gl.MAX_TEXTURE_SIZE)));
+ $("#landing").style.display="none";
+ exitCrop();state.tab="light";
+ document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab==="light"));
+ buildPanel();layout();draw();
+ setTimeout(()=>{$("#hint").style.opacity=0;},4000);
+}
+$("#btnPick").onclick=()=>$("#filePick").click();
+$("#btnCam").onclick=()=>$("#fileCam").click();
+if(window.GH)$("#btnCam").style.display="none";
+$("#filePick").onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0]);e.target.value="";};
+$("#fileCam").onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0]);e.target.value="";};
+$("#btnNew").onclick=()=>{$("#landing").style.display="flex";};
+/* ---------- compare (hold) ---------- */
+let holdT=null;
+stageEl.addEventListener("pointerdown",e=>{
+ if(state.cropMode||!state.bitmap)return;
+ if(e.target.closest("#cropBox"))return;
+ holdT=setTimeout(()=>{compare=true;draw();},180);
+});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>stageEl.addEventListener(ev,()=>{
+ clearTimeout(holdT);
+ if(compare){compare=false;draw();}
+}));
+
+/* ---------- export ---------- */
+function exportImage(){
+ if(!state.bitmap)return;
+ $("#spinner").style.display="flex";
+ setTimeout(()=>{
+  try{
+   const odd=state.rot90%2===1;
+   const bw=odd?state.imgH:state.imgW,bh=odd?state.imgW:state.imgH;
+   const c=state.crop;
+   let W=Math.max(1,Math.round(bw*c.w)),H=Math.max(1,Math.round(bh*c.h));
+   const off=document.createElement("canvas");
+   const oc=makeCtx(off);
+   if(!oc)throw new Error("nogl");
+   const limit=Math.min(4000,oc.gl.getParameter(oc.gl.MAX_TEXTURE_SIZE),oc.gl.getParameter(oc.gl.MAX_RENDERBUFFER_SIZE));
+   uploadAll(oc,state.bitmap,limit);
+   const scale=Math.min(1,limit/Math.max(W,H));
+   W=Math.round(W*scale);H=Math.round(H*scale);
+   render(oc,W,H,c,state.rot90,state.angle,state.params,false);
+   const finish=blob=>{
+    $("#spinner").style.display="none";
+    if(!blob){toast("Export failed");return;}
+    const name="GHPhotoEdit-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+".jpg";
+    if(window.GH&&GH.saveImage){
+     const rd=new FileReader();
+     rd.onload=()=>{GH.saveImage(rd.result.split(",")[1],name);toast("Save requested");};
+     rd.readAsDataURL(blob);
+    }else{
+     const a=document.createElement("a");
+     a.href=URL.createObjectURL(blob);a.download=name;a.click();
+     setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+     toast("Download started");
+    }
+   };
+   if(off.toBlob)off.toBlob(finish,"image/jpeg",0.92);else finish(null);
+  }catch(e){$("#spinner").style.display="none";toast("Export failed");}
+ },50);
+}
+$("#btnExport").onclick=exportImage;
+
+
+function imageStats(bitmap){const c=document.createElement("canvas");c.width=96;c.height=96;const cx=c.getContext("2d",{willReadFrequently:true});cx.drawImage(bitmap,0,0,96,96);const pixels=cx.getImageData(0,0,96,96).data;let mean=[0,0,0],sq=[0,0,0],n=0;for(let i=0;i<pixels.length;i+=4){if(pixels[i+3]<128)continue;n++;for(let j=0;j<3;j++){let v=pixels[i+j]/255;mean[j]+=v;sq[j]+=v*v;}}n=Math.max(1,n);mean=mean.map(v=>v/n);return{mean,std:sq.map((v,i)=>Math.sqrt(Math.max(.0001,v/n-mean[i]*mean[i])))};}
+$("#fileRef").onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const bmp=await createImageBitmap(file,{imageOrientation:"from-image"});const st=imageStats(bmp);state.refMean=st.mean;state.refStd=st.std;const small=drawTo(bmp,192);const c=document.createElement("canvas");c.width=small.width;c.height=small.height;c.getContext("2d").drawImage(small,0,0);state.refThumb=c.toDataURL("image/jpeg",.7);bmp.close();state.params.refAmount=65;pushHistory();buildPanel();requestDraw();toast("Reference colors applied");}catch(err){toast("Could not open reference");}e.target.value="";};
+const iconPaths={presets:'<path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4z"/>',crop:'<path d="M6 3v15h15M3 6h15v15"/>',light:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/>',color:'<path d="M12 3c3 4 7 8 7 12a7 7 0 0 1-14 0c0-4 4-8 7-12z"/><path d="M8 15a4 4 0 0 0 4 4"/>',effects:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16M12 8h6m-6 4h8m-8 4h6"/>',reference:'<rect x="3" y="6" width="12" height="14" rx="2"/><path d="M9 6V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v13M5 17l3-4 3 2 2-3"/>'};
+function svg(path){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+path+'</svg>';}
+document.querySelectorAll(".tab").forEach(el=>el.querySelector(".ico").innerHTML=svg(iconPaths[el.dataset.tab]||iconPaths.effects));
+$("#btnNew").innerHTML=svg('<path d="m14 5-7 7 7 7"/>');$("#btnUndo").innerHTML=svg('<path d="m8 5-5 5 5 5M3 10h10a7 7 0 0 1 7 7"/>');$("#btnRedo").innerHTML=svg('<path d="m16 5 5 5-5 5m5-5H11a7 7 0 0 0-7 7"/>');
+
+/* ---------- misc ---------- */
+let toastT=null;
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");
+ clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
+window.addEventListener("resize",()=>{layout();requestDraw();});
+if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
+ navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+/* demo mode for automated testing: ?demo=1 loads demo.jpg and applies a preset */
+(async()=>{
+ const q=new URLSearchParams(location.search);
+ if(q.get("demo")){
+  try{
+   const r=await fetch("demo.jpg");const b=await r.blob();
+   await loadFile(new File([b],"demo.jpg",{type:"image/jpeg"}));
+   const p=q.get("preset");
+   if(p!==null){const i=+p;if(PRESETS[i]){state.params=Object.assign(defaultParams(),PRESETS[i][1]);requestDraw();}}
+   if(q.get("crop")==="1"){state.tab="crop";enterCrop();buildPanel();layout();requestDraw();}
+   window.__demoReady=true;
+  }catch(e){window.__demoError=String(e);}
+ }
+})();
+</script>
+</body>
+</html>
