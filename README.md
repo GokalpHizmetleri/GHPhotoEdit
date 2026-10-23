@@ -2,7 +2,7 @@
 
 <p align="center"><img src="branding/logo.svg" alt="GHPhotoEdit folded-ribbons logo" width="140"></p>
 
-A local-first photo editor for Android and the web. Version 0.1.0 is an early preview, not a replacement for Lightroom.
+A local-first photo editor for Android and the web. Version 0.1.1 is an early preview, not a replacement for Lightroom.
 
 **Open the web app:** https://gokalphizmetleri.github.io/GHPhotoEdit/
 
@@ -21,7 +21,7 @@ A local-first photo editor for Android and the web. Version 0.1.0 is an early pr
 
 Photo processing runs on the device. The app does not upload image pixels or require an account, API key, AI model or paid service. Reference matching uses per-channel color statistics. It approximates a look; it cannot recover the original editing settings from another photo. Scene differences affect the result.
 
-The Android package does not request internet permission. The web host receives normal page/asset requests, but the app does not send selected photos to it. Editing sessions are not saved when the page closes.
+The Android package requests internet permission only to check a fixed same-project HTTPS update manifest when the app opens. No image data is sent with that check. The web host receives normal page/asset requests, but the app does not send selected photos to it. Editing sessions are not saved when the page closes.
 
 ## Getting started
 
@@ -36,6 +36,12 @@ The GitHub Pages HTTPS deployment, service-worker scope, offline reload/import a
 The preview supports Android 10 or later and uses the installed Android System WebView. Open a photo through the system file picker. Export writes a new JPEG to `Pictures/GHPhotoEdit`. The preview is debug-signed and requires permission to install from its download source. The Android preview does not include direct camera capture.
 
 The APK builds and its signature verifies. It has not been run on a physical Android device. Emulator testing was blocked by the build environment's CPU capacity, so startup, file-picker integration and gallery saving still need device testing.
+
+## Android update notice
+
+Starting with 0.1.1, opening the app checks `android-update.json` on this project's GitHub Pages site. If a higher compatible versionCode is available, an English "Update available" dialog offers to open the official GitHub release in your browser. It never downloads or installs silently, never sends photos, and does not run while the app is closed. Offline errors and five-second timeouts are ignored so editing can continue.
+
+Existing 0.1.0 installations must be manually updated once to 0.1.1 to gain this checker. The package ID and signing certificate match the published 0.1.0 preview. The dialog has not been visually tested on Android; version/URL policy tests and the APK build pass.
 
 ## Build Android
 
