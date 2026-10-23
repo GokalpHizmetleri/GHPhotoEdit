@@ -97,7 +97,7 @@ console.log('histogram + curve canvas drag PASS');
 
 // 7. Layout screenshots
 for(const width of[320,390,1280]){await p.setViewportSize({width,height:844});
- for(const tab of['curve','detail','grading','library']){await p.locator('[data-tab='+tab+']').click();await p.waitForTimeout(400);await p.screenshot({path:'/downloads/GHPhotoEdit-stageA-'+tab+'-'+width+'.png'});}}
+ for(const tab of['curve','effects','color','library']){await p.locator('[data-tab='+tab+']').click();await p.waitForTimeout(400);await p.screenshot({path:'/downloads/GHPhotoEdit-stageA-'+tab+'-'+width+'.png'});}}
 console.log({errors,offOrigin:requests.filter(u=>!u.startsWith('http://127.0.0.1:8913'))});
 await b.close();srv.close();if(errors.length)process.exit(1);
 })().catch(e=>{console.error(e);process.exit(1)});
