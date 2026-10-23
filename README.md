@@ -4,6 +4,8 @@
 
 A local-first photo editor for Android and the web. Version 0.1.0 is an early preview, not a replacement for Lightroom.
 
+**Open the web app:** https://gokalphizmetleri.github.io/GHPhotoEdit/
+
 ## Features
 
 - Open photos without modifying the original file
@@ -27,7 +29,7 @@ The Android package does not request internet permission. The web host receives 
 
 Serve the contents of `web/` from one directory on an HTTPS static host. Localhost also works for development. The manifest and service worker must be served from the app's origin. Open the page and use the browser's installation menu when available. Offline use requires a completed first load and service-worker activation.
 
-No production HTTPS deployment or physical-device PWA installation has been verified yet.
+The GitHub Pages HTTPS deployment, service-worker scope, offline reload/import and browser installability checks have been verified. Physical-device PWA installation has not been tested.
 
 ### Android
 
@@ -68,4 +70,4 @@ Chromium tests passed for file import, sliders, undo/redo, looks, square croppin
 
 ## Branding and publication
 
-The folded-ribbons logo was approved for GHPhotoEdit. Web hosting has not yet been deployed. No trademark clearance has been performed. No license for third-party reuse of the application source has been selected yet.
+The folded-ribbons logo was approved for GHPhotoEdit. The web app is published on GitHub Pages. No trademark clearance has been performed. No license for third-party reuse of the application source has been selected yet.
