@@ -26,6 +26,9 @@ public class MainActivity extends Activity {
    @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){return true;}
   });
   web.setWebChromeClient(new WebChromeClient(){
+   @Override public boolean onJsConfirm(WebView view,String url,String message,JsResult result){
+    new AlertDialog.Builder(MainActivity.this).setMessage(message).setPositiveButton("Delete",(dialog,which)->result.confirm()).setNegativeButton("Cancel",(dialog,which)->result.cancel()).setOnCancelListener(dialog->result.cancel()).show();return true;
+   }
    @Override public boolean onShowFileChooser(WebView v,ValueCallback<Uri[]> callback,FileChooserParams params){
     if(chooser!=null)chooser.onReceiveValue(null);chooser=callback;
     Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("image/*");
@@ -34,13 +37,15 @@ public class MainActivity extends Activity {
    }
   });
   web.addJavascriptInterface(new Object(){
-   @JavascriptInterface public void saveImage(String encoded,String ignored){
+   @JavascriptInterface public void saveImage(String encoded,String ignored){savePhoto(encoded,ignored,"image/jpeg");}
+   @JavascriptInterface public void savePhoto(String encoded,String ignored,String requestedMime){
+    final String mime="image/png".equals(requestedMime)?"image/png":"image/jpeg";
     new Thread(()->{
      Uri uri=null;
      try{
       byte[] data=Base64.decode(encoded,Base64.DEFAULT);
-      ContentValues values=new ContentValues();values.put(MediaStore.Images.Media.DISPLAY_NAME,"GHPhotoEdit-"+System.currentTimeMillis()+".jpg");
-      values.put(MediaStore.Images.Media.MIME_TYPE,"image/jpeg");values.put(MediaStore.Images.Media.RELATIVE_PATH,"Pictures/GHPhotoEdit");values.put(MediaStore.Images.Media.IS_PENDING,1);
+      ContentValues values=new ContentValues();values.put(MediaStore.Images.Media.DISPLAY_NAME,"GHPhotoEdit-"+System.currentTimeMillis()+(mime.equals("image/png")?".png":".jpg"));
+      values.put(MediaStore.Images.Media.MIME_TYPE,mime);values.put(MediaStore.Images.Media.RELATIVE_PATH,"Pictures/GHPhotoEdit");values.put(MediaStore.Images.Media.IS_PENDING,1);
       uri=getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
       if(uri==null)throw new Exception("No media uri");
       try(OutputStream out=getContentResolver().openOutputStream(uri)){if(out==null)throw new Exception("No stream");out.write(data);}

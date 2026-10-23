@@ -79,6 +79,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px}.hbtn.primary{white-space:nowrap;padding:0 12px;border-radius:12px;background:linear-gradient(135deg,#b7c4ff,#7edddd);height:42px}.brand{letter-spacing:-.4px}
 #stage{background:radial-gradient(ellipse at center,#1d2538,#0b0e16 75%)}#gl{border-radius:5px;box-shadow:0 14px 50px #0008}#panel{border-radius:22px 22px 0 0;overflow:hidden;box-shadow:0 -8px 32px #0003}#panelBody{padding-top:10px}#tabs{padding:4px 4px max(4px,env(safe-area-inset-bottom));gap:2px}.tab{padding:9px 0 8px;border-radius:12px}.tab.active{background:#29334c}.tab .ico{height:24px;margin-bottom:4px}.ico svg,.hbtn svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.hbtn svg{width:20px}.slider-row{padding:4px 16px}.slider-row label{width:104px;font-size:12px}input[type=range]::-webkit-slider-thumb{background:#dfe5ff;width:20px;height:20px;margin-top:-8.5px}.preset canvas{border-radius:14px}.preset-strip{gap:12px}.preset span{font-size:12px;color:#c4cde0}#hint{opacity:1!important;background:#111a2deb;color:#dce5fa;bottom:12px;font-size:11px;padding:6px 10px}#landing{background:radial-gradient(ellipse at 20% 0%,#283857,#0b0e16 70%)}#landing .logo{font-size:40px;letter-spacing:-1.8px}#landing .tag{line-height:1.7;margin:10px 0 22px}.big-btn{border-radius:18px;height:56px}.big-btn.b1{background:linear-gradient(110deg,#b8c5ff,#7edddd)}#landing .foot{color:#a4aec2}.ref-tools{padding:6px 12px 12px}.ref-head{display:flex;align-items:center;gap:12px;margin:6px 0 12px}.ref-head img{width:62px;height:62px;object-fit:cover;border-radius:12px}.ref-head p{font-size:12px;line-height:1.6;color:#bac5d9;margin:0}.ref-tools button{min-height:44px;border-radius:12px;background:#29334c;padding:8px 14px}.ref-tools .slider-row{padding:8px 0}.section-name{font-size:12px;color:#bdc8e0;letter-spacing:.8px;text-transform:uppercase;padding:0 16px 6px}.landing-mark{width:76px;height:76px;border-radius:24px;background:linear-gradient(135deg,#b8c5ff,#71d7d9);display:grid;place-items:center;color:#10182d;margin-bottom:22px}.rot-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7}.landing-mark svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.5}
 @media(max-width:350px){header{gap:1px;padding:10px 6px}.hbtn{min-width:30px;padding:0 5px}.hbtn.primary{font-size:12px;padding:0 9px}.brand{font-size:14px!important}.slider-row label{width:90px}.slider-row{gap:8px}.tab{font-size:11px}}
+</style><style>
+#toast{position:absolute;top:auto;bottom:42px;z-index:60;background:#25324eee;max-width:90vw;padding:7px 12px}#tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}.tab{min-width:0;font-size:11px;padding:7px 2px}.tab .ico{height:21px;margin-bottom:2px}.tab svg{width:19px;height:19px}#panelBody{max-height:33dvh}.tools{padding:8px 14px 14px}.tools p{font-size:12px;line-height:1.5;color:#c3cde1;margin:6px 0 10px}.tools button,.sheet button{background:#29334c;border-radius:10px;padding:10px 14px;min-height:42px;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.tools input:not([type=range]),.sheet input:not([type=range]),.sheet select{background:#0e1525;border:1px solid #46516c;color:#edf1ff;border-radius:9px;padding:10px;min-width:0;max-width:100%;font:inherit}.tools .slider-row{padding:4px 0}.small-note{font-size:11px!important;color:#aab8d1!important}.item-row{display:flex;align-items:center;gap:8px;border-top:1px solid #303a50;padding:8px 0}.item-row span{flex:1;min-width:0;overflow-wrap:anywhere;font-size:13px}.item-row button{padding:8px 10px}.sheet{background:#161e2f;color:#edf1ff;border:1px solid #38445d;border-radius:18px;width:min(400px,94vw);max-height:88dvh;padding:20px;overflow:auto}.sheet::backdrop{background:#000a}.sheet h2{margin:0 0 16px;font-size:19px}.sheet label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;font-size:14px}.sheet .actions{justify-content:flex-end}.sheet p{font-size:12px;line-height:1.5;color:#c3cde1}#compareWrap{position:absolute;top:8px;left:15%;width:70%;display:none;background:#101827e8;border-radius:12px;padding:6px 10px;z-index:8}#compareWrap label{display:flex;align-items:center;gap:10px;font-size:11px}#compareRange{min-width:0;width:100%}.swatches{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.swatches button{width:28px;height:28px;min-height:28px;padding:0;border:2px solid transparent;border-radius:50%}.swatches button.active{border-color:white;box-shadow:0 0 0 2px #7e90c9}#draftsList{max-height:34dvh;overflow:auto;width:min(320px,90vw)}.draft-preview{width:38px;height:38px;border-radius:6px;object-fit:cover}
 </style></head>
 <body>
 <div id="app">
@@ -89,7 +91,7 @@ header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px
     <button class="hbtn" id="btnRedo" title="Redo" disabled>↷</button>
     <button class="hbtn primary" id="btnExport">Export</button>
   </header>
-  <div id="stage">
+  <div id="stage"><div id="compareWrap"><label>Before <input id="compareRange" aria-label="Before after split" type="range" min="0" max="100" value="50"> After</label></div>
     <canvas id="gl"></canvas>
     <div id="cropOverlay"><div id="cropBox"><div class="grid"></div>
       <div class="handle" id="h-nw"></div><div class="handle" id="h-ne"></div>
@@ -99,12 +101,12 @@ header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px
   </div>
   <div id="panel">
     <div id="panelBody"></div>
-    <div id="tabs">
+    <div id="tabs"><button class="tab" data-tab="library"><span class="ico"></span>Library</button>
       <button class="tab" data-tab="presets"><span class="ico">✦</span>Looks</button>
       <button class="tab" data-tab="crop"><span class="ico">⬒</span>Crop</button>
       <button class="tab active" data-tab="light"><span class="ico">☀</span>Light</button>
       <button class="tab" data-tab="color"><span class="ico">🎨</span>Color</button>
-      <button class="tab" data-tab="reference"><span class="ico"></span>Match</button><button class="tab" data-tab="effects"><span class="ico">◐</span>Effects</button>
+      <button class="tab" data-tab="reference"><span class="ico"></span>Match</button><button class="tab" data-tab="hsl"><span class="ico"></span>HSL</button><button class="tab" data-tab="brush"><span class="ico"></span>Brush</button><button class="tab" data-tab="compare"><span class="ico"></span>Compare</button><button class="tab" data-tab="effects"><span class="ico">◐</span>Effects</button>
     </div>
   </div>
 </div>
@@ -113,11 +115,11 @@ header{padding:12px 12px;min-height:68px;background:#131825}.hbtn{min-width:36px
   <div class="tag">Your light. Your colors. Your style.<br>light · color · crop · photo matching</div>
   <button class="big-btn b1" id="btnPick">Open photo</button>
   <button class="big-btn b2" id="btnCam">Take a photo</button>
-  <div class="foot">Gökalp Hizmetleri</div>
+  <button class="big-btn b2" id="btnDrafts">Saved drafts</button><div id="draftsList"></div><div class="foot">Gökalp Hizmetleri</div>
 </div>
 <input type="file" id="fileRef" accept="image/*" style="display:none"><input type="file" id="filePick" accept="image/*" style="display:none">
 <input type="file" id="fileCam" accept="image/*" capture="environment" style="display:none">
-<div id="toast"></div>
+<dialog class="sheet" id="exportDialog"><h2>Export photo</h2><label>Format <select id="exportFormat"><option value="jpeg">JPEG</option><option value="png">PNG</option></select></label><label id="qualityLabel">JPEG quality <input type="number" id="exportQuality" min="1" max="100" value="92"></label><label>Longest side <select id="exportSize"><option value="4000">Up to 4000 px</option><option value="2048">Up to 2048 px</option><option value="1080">Up to 1080 px</option></select></label><p>No upscaling. Device limits may reduce the size. JPEG uses a black background for transparent areas. PNG keeps transparency. EXIF/GPS metadata is not copied.</p><div class="actions"><button id="cancelExport">Cancel</button><button id="confirmExport">Export</button></div></dialog><div id="toast"></div>
 <div id="spinner"><div class="box">Processing...</div></div>
 <script>
 "use strict";
@@ -141,18 +143,21 @@ const PRESETS=[
 const state={bitmap:null,imgW:0,imgH:0,params:{},rot90:0,angle:0,
  crop:{x:0,y:0,w:1,h:1},history:[],future:[],tab:"light",
  cropMode:false,pRot90:0,pAngle:0,pCrop:{x:0,y:0,w:1,h:1},pAspect:null};
-function defaultParams(){const p={refAmount:0};for(const[k]of PARAMS)p[k]=0;return p;}
+function defaultParams(){const p={refAmount:0,localExposure:0,localTemp:0,localTint:0};for(let i=0;i<8;i++)for(const k of ["Hue","Sat","Lum"])p["hsl"+k+i]=0;for(const[k]of PARAMS)p[k]=0;return p;}
 state.params=defaultParams();
 
 state.refMean=[.5,.5,.5];state.refStd=[.2,.2,.2];state.srcMean=[.5,.5,.5];state.srcStd=[.2,.2,.2];state.refThumb=null;
+state.strokes=[];state.maskDirty=true;state.split=-1;state.brushSize=10;state.erase=false;state.hslColor=0;state.maskCanvas=document.createElement("canvas");state.maskCanvas.width=512;state.maskCanvas.height=512;
 const VSRC="attribute vec2 aPos;varying vec2 vUV;void main(){vUV=aPos*0.5+0.5;gl_Position=vec4(aPos,0.,1.);}";
 const FSRC=`precision highp float;
 varying vec2 vUV;
-uniform sampler2D uImage;uniform sampler2D uBlur;
+uniform sampler2D uImage;uniform sampler2D uBlur;uniform sampler2D uMask;uniform vec3 uHSL[8];uniform float uSplit,uLocalExposure,uLocalTemp,uLocalTint;
 uniform vec4 uCrop;uniform float uAngle;uniform float uAspect;uniform int uRot90;
 uniform float uExposure,uContrast,uHighlights,uShadows,uWhites,uBlacks;
 uniform vec3 uRefMean,uRefStd,uSrcMean,uSrcStd;uniform float uRefAmount;
 uniform float uTemp,uTint,uVibrance,uSaturation,uClarity,uVignette,uCompare;
+vec3 rgb2hsl(vec3 c){float hi=max(c.r,max(c.g,c.b)),lo=min(c.r,min(c.g,c.b)),d=hi-lo,l=(hi+lo)*.5,h=0.0,s=0.0;if(d>.00001){s=d/(1.0-abs(2.0*l-1.0));if(hi==c.r)h=mod((c.g-c.b)/d,6.0);else if(hi==c.g)h=(c.b-c.r)/d+2.0;else h=(c.r-c.g)/d+4.0;h=fract(h/6.0+1.0);}return vec3(h,s,l);}
+vec3 hsl2rgb(vec3 hsl){vec3 rgb=clamp(abs(mod(hsl.x*6.0+vec3(0,4,2),6.0)-3.0)-1.0,0.0,1.0);float a=(1.0-abs(2.0*hsl.z-1.0))*hsl.y;return (rgb-.5)*a+hsl.z;}
 float luma(vec3 c){return dot(c,vec3(0.299,0.587,0.114));}
 vec2 invRot(vec2 d){
  if(uRot90==1)return vec2(d.y,1.0-d.x);
@@ -168,7 +173,7 @@ void main(){
  vec2 uv=invRot(d+0.5);
  if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){gl_FragColor=vec4(0.027,0.031,0.039,1.0);return;}
  vec3 c=texture2D(uImage,uv).rgb;
- if(uCompare<0.5){
+ if(uCompare<0.5 && !(uSplit>=0.0 && o.x<uSplit)){
   vec3 matched=clamp((c-uSrcMean)*clamp(uRefStd/max(uSrcStd,vec3(.025)),vec3(.35),vec3(2.8))+uRefMean,0.0,1.0);
   c=mix(c,matched,uRefAmount);
   c*=vec3(1.0+uTemp*0.13,1.0-uTint*0.10,1.0-uTemp*0.13);
@@ -190,9 +195,13 @@ void main(){
   c=mix(vec3(l2),c,1.0+uVibrance*(1.0-sat)*0.9+uSaturation);
   float dist=length((o-0.5)*1.3);
   c*=1.0+uVignette*smoothstep(0.3,0.95,dist)*0.6;
+  vec3 hsl=rgb2hsl(clamp(c,0.0,1.0));vec3 shift=vec3(0.0);float weights=0.0;
+  for(int i=0;i<8;i++){float center=i==0?0.0:i==1?.083333:i==2?.166667:i==3?.333333:i==4?.5:i==5?.666667:i==6?.75:.833333;float delta=abs(hsl.x-center);delta=min(delta,1.0-delta);float weight=max(0.0,1.0-delta/.125);shift+=uHSL[i]*weight;weights+=weight;}
+  if(weights>0.0)shift/=weights;hsl.x=fract(hsl.x+shift.x*.12);hsl.y=clamp(hsl.y*(1.0+shift.y),0.0,1.0);hsl.z=clamp(hsl.z+shift.z*.25*hsl.y,0.0,1.0);c=hsl2rgb(hsl);
+  float mask=texture2D(uMask,uv).r;c*=pow(2.0,uLocalExposure*mask);c*=vec3(1.0+uLocalTemp*mask*.2,1.0-uLocalTint*mask*.2,1.0-uLocalTemp*mask*.2);
   c=clamp(c,0.0,1.0);
  }
- gl_FragColor=vec4(c,1.0);
+ if(uSplit>=0.0 && abs(o.x-uSplit)<.0015)c=vec3(.95);gl_FragColor=vec4(c,texture2D(uImage,uv).a);
 }`;
 
 function makeCtx(canvas){
@@ -213,11 +222,11 @@ function makeCtx(canvas){
  gl.enableVertexAttribArray(loc);
  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
  const U={};
- ["uRefMean","uRefStd","uSrcMean","uSrcStd","uRefAmount","uImage","uBlur","uCrop","uAngle","uAspect","uRot90","uExposure","uContrast","uHighlights",
+ ["uMask","uHSL[0]","uSplit","uLocalExposure","uLocalTemp","uLocalTint","uRefMean","uRefStd","uSrcMean","uSrcStd","uRefAmount","uImage","uBlur","uCrop","uAngle","uAspect","uRot90","uExposure","uContrast","uHighlights",
   "uShadows","uWhites","uBlacks","uTemp","uTint","uVibrance","uSaturation","uClarity",
   "uVignette","uCompare"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
- gl.uniform1i(U.uImage,0);gl.uniform1i(U.uBlur,1);
- return{gl,U,texImg:gl.createTexture(),texBlur:gl.createTexture()};
+ gl.uniform1i(U.uImage,0);gl.uniform1i(U.uBlur,1);gl.uniform1i(U.uMask,2);
+ return{gl,U,texImg:gl.createTexture(),texBlur:gl.createTexture(),texMask:gl.createTexture(),maskVersion:-1};
 }
 function uploadTex(ctx,tex,src){
  const gl=ctx.gl;
@@ -251,6 +260,10 @@ function render(ctx,W,H,crop,rot90,angleDeg,params,compare){
  const aspect=rot90%2===1?state.imgH/state.imgW:state.imgW/state.imgH;
  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,ctx.texImg);
  gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,ctx.texBlur);
+ if(state.maskDirty)rebuildMask();
+ gl.activeTexture(gl.TEXTURE2);if(ctx.maskVersion!==state.maskVersion){uploadTex(ctx,ctx.texMask,state.maskCanvas);ctx.maskVersion=state.maskVersion;}gl.bindTexture(gl.TEXTURE_2D,ctx.texMask);
+ const hsl=[];for(let i=0;i<8;i++)hsl.push((params["hslHue"+i]||0)/100,(params["hslSat"+i]||0)/100,(params["hslLum"+i]||0)/100);gl.uniform3fv(U["uHSL[0]"],hsl);
+ gl.uniform1f(U.uSplit,ctx===view?state.split:-1);gl.uniform1f(U.uLocalExposure,(params.localExposure||0)*.02);gl.uniform1f(U.uLocalTemp,(params.localTemp||0)/100);gl.uniform1f(U.uLocalTint,(params.localTint||0)/100);
  gl.uniform4f(U.uCrop,crop.x,crop.y,crop.w,crop.h);
  gl.uniform1f(U.uAngle,angleDeg*Math.PI/180);
  gl.uniform1f(U.uAspect,aspect);
@@ -302,10 +315,10 @@ function draw(){
 function requestDraw(){if(!rafPending){rafPending=true;requestAnimationFrame(()=>{rafPending=false;draw();});}}
 
 /* ---------- history ---------- */
-function snap(){return JSON.stringify({p:state.params,c:state.crop,r:state.rot90,a:state.angle,rm:state.refMean,rs:state.refStd});}
+function snap(){return JSON.stringify({p:state.params,c:state.crop,r:state.rot90,a:state.angle,rm:state.refMean,rs:state.refStd,st:state.strokes});}
 let committed=null;
-function pushHistory(){const next=snap();if(committed===next)return;if(committed)state.history.push(committed);committed=next;if(state.history.length>60)state.history.shift();state.future.length=0;syncHistButtons();}
-function restore(s){committed=s;const o=JSON.parse(s);state.params=o.p;state.crop=o.c;state.rot90=o.r;state.angle=o.a;state.refMean=o.rm||state.refMean;state.refStd=o.rs||state.refStd;
+function pushHistory(){const next=snap();if(committed===next)return;if(committed)state.history.push(committed);committed=next;if(state.history.length>30)state.history.shift();state.future.length=0;syncHistButtons();}
+function restore(s){committed=s;const o=JSON.parse(s);state.params=Object.assign(defaultParams(),o.p);state.strokes=o.st||[];state.maskDirty=true;state.crop=o.c;state.rot90=o.r;state.angle=o.a;state.refMean=o.rm||state.refMean;state.refStd=o.rs||state.refStd;
  if(state.tab==="crop"){state.pRot90=state.rot90;state.pAngle=state.angle;state.pCrop={...state.crop};}
  buildPanel();layout();requestDraw();}
 function syncHistButtons(){$("#btnUndo").disabled=!state.history.length;$("#btnRedo").disabled=!state.future.length;}
@@ -330,7 +343,8 @@ function sliderRow(key,label){
 }
 function buildPanel(){
  const body=$("#panelBody");body.innerHTML="";
- if(state.tab==="reference"){
+ if(["library","hsl","brush","compare"].includes(state.tab)){buildExtraPanel(body);
+ }else if(state.tab==="reference"){
  const wrap=document.createElement("div");wrap.className="ref-tools";
  const info=document.createElement("div");info.className="ref-head";
  if(state.refThumb){const im=document.createElement("img");im.src=state.refThumb;im.alt="Reference photo";info.append(im);}
@@ -356,7 +370,7 @@ function buildPanel(){
   });
   body.append(strip);
   const rs=document.createElement("button");rs.className="reset-all";rs.textContent="Reset all edits";
-  rs.onclick=()=>{state.params=defaultParams();state.crop={x:0,y:0,w:1,h:1};state.rot90=0;state.angle=0;
+  rs.onclick=()=>{state.strokes=[];state.maskDirty=true;state.params=defaultParams();state.crop={x:0,y:0,w:1,h:1};state.rot90=0;state.angle=0;
    pushHistory();layout();requestDraw();};
   body.append(rs);
  }else if(state.tab==="crop"){
@@ -386,6 +400,7 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
  t.classList.add("active");state.tab=t.dataset.tab;
  if(state.tab==="crop")enterCrop();else exitCrop();
+ state.split=state.tab==="compare"?+$("#compareRange").value/100:-1;$("#compareWrap").style.display=state.tab==="compare"?"block":"none";
  buildPanel();layout();requestDraw();});
 
 /* ---------- crop ---------- */
@@ -461,17 +476,18 @@ async function loadFile(file){
  $("#spinner").style.display="flex";
  try{
   const bmp=await createImageBitmap(file,{imageOrientation:"from-image"});
-  setImage(bmp);
+  setImage(bmp);state.sourceBlob=file;
  }catch(err){
   try{
    const url=URL.createObjectURL(file);
    const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});
-   const bmp=await createImageBitmap(img);URL.revokeObjectURL(url);setImage(bmp);
+   const bmp=await createImageBitmap(img);URL.revokeObjectURL(url);setImage(bmp);state.sourceBlob=file;
   }catch(e2){toast("Could not open photo");}
  }
  $("#spinner").style.display="none";
 }
 function setImage(bmp){
+ state.strokes=[];state.maskDirty=true;state.split=-1;$("#compareWrap").style.display="none";
  if(state.bitmap&&state.bitmap.close)state.bitmap.close();
  state.bitmap=bmp;const stats=imageStats(bmp);state.srcMean=stats.mean;state.srcStd=stats.std;state.imgW=bmp.width;state.imgH=bmp.height;
  state.params=defaultParams();state.rot90=0;state.angle=0;state.crop={x:0,y:0,w:1,h:1};
@@ -494,7 +510,7 @@ $("#btnNew").onclick=()=>{$("#landing").style.display="flex";};
 /* ---------- compare (hold) ---------- */
 let holdT=null;
 stageEl.addEventListener("pointerdown",e=>{
- if(state.cropMode||!state.bitmap)return;
+ if(state.cropMode||state.tab==="brush"||state.tab==="compare"||!state.bitmap)return;
  if(e.target.closest("#cropBox"))return;
  holdT=setTimeout(()=>{compare=true;draw();},180);
 });
@@ -516,18 +532,20 @@ function exportImage(){
    const off=document.createElement("canvas");
    const oc=makeCtx(off);
    if(!oc)throw new Error("nogl");
-   const limit=Math.min(4000,oc.gl.getParameter(oc.gl.MAX_TEXTURE_SIZE),oc.gl.getParameter(oc.gl.MAX_RENDERBUFFER_SIZE));
+   const limit=Math.min(+$("#exportSize").value,oc.gl.getParameter(oc.gl.MAX_TEXTURE_SIZE),oc.gl.getParameter(oc.gl.MAX_RENDERBUFFER_SIZE));
    uploadAll(oc,state.bitmap,limit);
    const scale=Math.min(1,limit/Math.max(W,H));
    W=Math.round(W*scale);H=Math.round(H*scale);
    render(oc,W,H,c,state.rot90,state.angle,state.params,false);
+   const format=$("#exportFormat").value;
    const finish=blob=>{
+    oc.gl.getExtension("WEBGL_lose_context")?.loseContext();
     $("#spinner").style.display="none";
     if(!blob){toast("Export failed");return;}
-    const name="GHPhotoEdit-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+".jpg";
+    const name="GHPhotoEdit-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+(format==="png"?".png":".jpg");
     if(window.GH&&GH.saveImage){
      const rd=new FileReader();
-     rd.onload=()=>{GH.saveImage(rd.result.split(",")[1],name);toast("Save requested");};
+     rd.onload=()=>{if(GH.savePhoto)GH.savePhoto(rd.result.split(",")[1],name,format==="png"?"image/png":"image/jpeg");else GH.saveImage(rd.result.split(",")[1],name);toast("Save requested");};
      rd.readAsDataURL(blob);
     }else{
      const a=document.createElement("a");
@@ -536,21 +554,64 @@ function exportImage(){
      toast("Download started");
     }
    };
-   if(off.toBlob)off.toBlob(finish,"image/jpeg",0.92);else finish(null);
+   if(off.toBlob)off.toBlob(blob=>{oc.gl.getExtension("WEBGL_lose_context")?.loseContext();finish(blob);},format==="png"?"image/png":"image/jpeg",Math.min(1,Math.max(.01,+$("#exportQuality").value/100)));else finish(null);
   }catch(e){$("#spinner").style.display="none";toast("Export failed");}
  },50);
 }
-$("#btnExport").onclick=exportImage;
+$("#btnExport").onclick=()=>{if(state.bitmap)$("#exportDialog").showModal();};
+$("#cancelExport").onclick=()=>$("#exportDialog").close();$("#confirmExport").onclick=()=>{$("#exportDialog").close();exportImage();};$("#exportFormat").onchange=()=>$("#qualityLabel").style.display=$("#exportFormat").value==="png"?"none":"flex";
 
 
 function imageStats(bitmap){const c=document.createElement("canvas");c.width=96;c.height=96;const cx=c.getContext("2d",{willReadFrequently:true});cx.drawImage(bitmap,0,0,96,96);const pixels=cx.getImageData(0,0,96,96).data;let mean=[0,0,0],sq=[0,0,0],n=0;for(let i=0;i<pixels.length;i+=4){if(pixels[i+3]<128)continue;n++;for(let j=0;j<3;j++){let v=pixels[i+j]/255;mean[j]+=v;sq[j]+=v*v;}}n=Math.max(1,n);mean=mean.map(v=>v/n);return{mean,std:sq.map((v,i)=>Math.sqrt(Math.max(.0001,v/n-mean[i]*mean[i])))};}
 $("#fileRef").onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const bmp=await createImageBitmap(file,{imageOrientation:"from-image"});const st=imageStats(bmp);state.refMean=st.mean;state.refStd=st.std;const small=drawTo(bmp,192);const c=document.createElement("canvas");c.width=small.width;c.height=small.height;c.getContext("2d").drawImage(small,0,0);state.refThumb=c.toDataURL("image/jpeg",.7);bmp.close();state.params.refAmount=65;pushHistory();buildPanel();requestDraw();toast("Reference colors applied");}catch(err){toast("Could not open reference");}e.target.value="";};
 const iconPaths={presets:'<path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4z"/>',crop:'<path d="M6 3v15h15M3 6h15v15"/>',light:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/>',color:'<path d="M12 3c3 4 7 8 7 12a7 7 0 0 1-14 0c0-4 4-8 7-12z"/><path d="M8 15a4 4 0 0 0 4 4"/>',effects:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16M12 8h6m-6 4h8m-8 4h6"/>',reference:'<rect x="3" y="6" width="12" height="14" rx="2"/><path d="M9 6V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v13M5 17l3-4 3 2 2-3"/>'};
 function svg(path){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+path+'</svg>';}
+Object.assign(iconPaths,{library:'<path d="M4 4h16v16H4zM8 4v6h8V4M8 20v-6h8v6"/>',hsl:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/>',brush:'<path d="m14 4 6 6-9 9H5v-6zM12 6l6 6"/>',compare:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 2v20"/>'});
 document.querySelectorAll(".tab").forEach(el=>el.querySelector(".ico").innerHTML=svg(iconPaths[el.dataset.tab]||iconPaths.effects));
 $("#btnNew").innerHTML=svg('<path d="m14 5-7 7 7 7"/>');$("#btnUndo").innerHTML=svg('<path d="m8 5-5 5 5 5M3 10h10a7 7 0 0 1 7 7"/>');$("#btnRedo").innerHTML=svg('<path d="m16 5 5 5-5 5m5-5H11a7 7 0 0 0-7 7"/>');
 
+/* Local tools and versioned, device-local persistence */
+function action(label,fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;return b;}
+function paragraph(text){const p=document.createElement('p');p.textContent=text;return p;}
+function textField(placeholder){const i=document.createElement('input');i.placeholder=placeholder;i.maxLength=48;return i;}
+function getDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open('GHPhotoEdit-local',1);req.onupgradeneeded=()=>{const db=req.result;db.createObjectStore('drafts',{keyPath:'id'});db.createObjectStore('presets',{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+async function dbOp(store,mode,fn){const db=await getDB();return new Promise((res,rej)=>{const tx=db.transaction(store,mode);let value;const r=fn(tx.objectStore(store));r.onsuccess=()=>value=r.result;tx.oncomplete=()=>{db.close();res(value);};tx.onerror=()=>{db.close();rej(tx.error);};});}
+const readAll=store=>dbOp(store,'readonly',s=>s.getAll());
+const putRecord=(store,value)=>dbOp(store,'readwrite',s=>s.put(value));
+const deleteRecord=(store,id)=>dbOp(store,'readwrite',s=>s.delete(id));
+function uniqueId(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);}
+async function saveDraft(name){if(!state.bitmap||!state.sourceBlob)throw Error('No photo');const thumbnail=document.createElement('canvas');thumbnail.width=120;thumbnail.height=80;thumbnail.getContext('2d').drawImage(glCanvas,0,0,120,80);await putRecord('drafts',{schema:1,id:uniqueId(),name:(name||'Untitled draft').slice(0,48),savedAt:Date.now(),photo:state.sourceBlob,edit:snap(),refThumb:state.refThumb,thumb:thumbnail.toDataURL('image/jpeg',.6)});}
+async function openDraft(id){const d=await dbOp('drafts','readonly',s=>s.get(id));if(!d||d.schema!==1)throw Error('Unsupported draft');const bmp=await createImageBitmap(d.photo,{imageOrientation:'from-image'});setImage(bmp);state.sourceBlob=d.photo;restore(d.edit);state.refThumb=d.refThumb;buildPanel();state.history=[];state.future=[];committed=snap();syncHistButtons();}
+async function listDrafts(target){target.innerHTML='';try{const records=(await readAll('drafts')).sort((a,b)=>b.savedAt-a.savedAt);if(!records.length)target.append(paragraph('No saved drafts on this device.'));for(const d of records){const row=document.createElement('div');row.className='item-row';const img=document.createElement('img');img.src=d.thumb;img.className='draft-preview';img.alt='';const label=document.createElement('span');label.textContent=d.name;row.append(img,label,action('Open',async()=>{try{await openDraft(d.id);}catch(e){toast('Could not open draft');}}),action('Delete',async()=>{if(confirm('Delete this saved draft?')){try{await deleteRecord('drafts',d.id);listDrafts(target);}catch(e){toast('Could not delete draft');}}}));target.append(row);}}catch(e){target.append(paragraph('Device storage is unavailable.'));}}
+$('#btnDrafts').onclick=()=>listDrafts($('#draftsList'));
+function buildExtraPanel(body){const box=document.createElement('div');box.className='tools';body.append(box);
+ if(state.tab==='library'){
+ box.append(paragraph('Saved only on this device. Browser cleanup or uninstalling the app can erase drafts and presets. Export important photos separately.'));
+ const name=textField('Draft or preset name');name.id='saveName';box.append(name);const actions=document.createElement('div');actions.className='actions';
+ actions.append(action('Save draft',async()=>{try{await saveDraft(name.value);toast('Draft saved');listDrafts(list);}catch(e){toast('Could not save draft. Check available storage.');}}),action('Save preset',async()=>{try{await putRecord('presets',{schema:1,id:uniqueId(),name:(name.value||'My look').slice(0,48),params:{...state.params},refMean:state.refMean,refStd:state.refStd});toast('Preset saved');loadPresets();}catch(e){toast('Could not save preset');}}));box.append(actions);
+ box.append(paragraph('Saved presets include global/HSL settings, reference colors and brush effect strength, but not crop or painted mask.'));const presets=document.createElement('div');box.append(presets);async function loadPresets(){presets.innerHTML='';try{for(const pr of await readAll('presets')){const row=document.createElement('div');row.className='item-row';const label=document.createElement('span');label.textContent=pr.name;row.append(label,action('Apply',()=>{state.params=Object.assign(defaultParams(),pr.params);state.refMean=pr.refMean||state.refMean;state.refStd=pr.refStd||state.refStd;pushHistory();requestDraw();toast('Preset applied');}),action('Delete',async()=>{if(confirm('Delete this preset?')){try{await deleteRecord('presets',pr.id);loadPresets();}catch(e){toast('Could not delete preset');}}}));presets.append(row);}}catch(e){presets.append(paragraph('Device storage unavailable.'));}}loadPresets();
+ const list=document.createElement('div');box.append(list);listDrafts(list);
+ }else if(state.tab==='hsl'){
+ box.append(paragraph('Adjust a color range, not the entire photo. Neighboring colors blend gradually.'));
+ const colors=['#ed5261','#f6954d','#e6ce53','#67c77d','#55c9c6','#548ce7','#aa77e5','#d76db8'];const names=['Red','Orange','Yellow','Green','Cyan','Blue','Purple','Magenta'];const sw=document.createElement('div');sw.className='swatches';colors.forEach((color,i)=>{const b=action('',()=>{state.hslColor=i;buildPanel();layout();requestDraw();});b.style.background=color;b.classList.toggle('active',i===state.hslColor);b.title=names[i];b.setAttribute('aria-label',names[i]);sw.append(b);});box.append(sw,paragraph(names[state.hslColor]));for(const [k,label]of [['Hue','Hue'],['Sat','Saturation'],['Lum','Luminance']])box.append(sliderRow('hsl'+k+state.hslColor,label));
+ }else if(state.tab==='compare'){
+ box.append(paragraph('Move the divider above the photo. Left: original colors. Right: edited colors. Both sides use the current crop and rotation.'));box.append(action('Center split',()=>{$('#compareRange').value=50;state.split=.5;requestDraw();}));
+ }else if(state.tab==='brush'){
+ box.append(paragraph('Paint one local mask on the photo. These exposure and color controls affect only painted areas. Undo restores strokes; crop and rotation keep the mask aligned. Scroll for color controls.'));
+ const size=document.createElement('input');size.type='range';size.min=1;size.max=30;size.value=state.brushSize;size.setAttribute('aria-label','Brush size');size.oninput=()=>state.brushSize=+size.value;box.append(paragraph('Brush size'),size);
+ const actions=document.createElement('div');actions.className='actions';actions.append(action(state.erase?'Eraser on':'Brush on',()=>{state.erase=!state.erase;buildPanel();}),action('Clear mask',()=>{state.strokes=[];state.maskDirty=true;pushHistory();requestDraw();}));box.append(actions,sliderRow('localExposure','Exposure'),sliderRow('localTemp','Temperature'),sliderRow('localTint','Tint'));
+ }
+}
+function rebuildMask(){const cv=state.maskCanvas,cx=cv.getContext('2d');cx.globalCompositeOperation='source-over';cx.fillStyle='black';cx.fillRect(0,0,cv.width,cv.height);for(const stroke of state.strokes){for(const p of stroke.points){const radius=stroke.size*cv.width/100;const grad=cx.createRadialGradient(p[0]*cv.width,p[1]*cv.height,0,p[0]*cv.width,p[1]*cv.height,radius);const color=stroke.erase?'0,0,0':'255,255,255';grad.addColorStop(0,'rgba('+color+',.65)');grad.addColorStop(1,'rgba('+color+',0)');cx.fillStyle=grad;cx.fillRect(p[0]*cv.width-radius,p[1]*cv.height-radius,radius*2,radius*2);}}state.maskDirty=false;state.maskVersion=(state.maskVersion||0)+1;}
+function sourcePoint(x,y){const c=state.crop;let dx=c.x+x*c.w-.5,dy=c.y+y*c.h-.5;const aspect=state.rot90%2?state.imgH/state.imgW:state.imgW/state.imgH;dx*=aspect;const angle=state.angle*Math.PI/180,ca=Math.cos(angle),sa=Math.sin(angle);const xx=(ca*dx+sa*dy)/aspect+.5,yy=-sa*dx+ca*dy+.5;switch(state.rot90){case 1:return[yy,1-xx];case 2:return[1-xx,1-yy];case 3:return[1-yy,xx];default:return[xx,yy];}}
+let painting=null;
+glCanvas.addEventListener('pointerdown',e=>{if(state.tab!=='brush'||!state.bitmap)return;e.preventDefault();e.stopPropagation();glCanvas.setPointerCapture(e.pointerId);painting={size:state.brushSize,erase:state.erase,points:[]};state.strokes.push(painting);paintPoint(e);});
+function paintPoint(e){if(!painting)return;const r=glCanvas.getBoundingClientRect();const p=sourcePoint((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height);if(p.some(v=>v<0||v>1))return;const prev=painting.points[painting.points.length-1];if(prev){const distance=Math.hypot(p[0]-prev[0],p[1]-prev[1]);const steps=Math.min(120,Math.ceil(distance/(painting.size/600)));for(let i=1;i<steps;i++)painting.points.push([prev[0]+(p[0]-prev[0])*i/steps,prev[1]+(p[1]-prev[1])*i/steps]);}painting.points.push(p);state.maskDirty=true;requestDraw();}
+glCanvas.addEventListener('pointermove',paintPoint);for(const type of ['pointerup','pointercancel'])glCanvas.addEventListener(type,()=>{if(painting){painting=null;pushHistory();}});
+$('#compareRange').oninput=e=>{state.split=+e.target.value/100;requestDraw();};
+
 /* ---------- misc ---------- */
+stageEl.append($("#toast"));
 let toastT=null;
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");
  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
